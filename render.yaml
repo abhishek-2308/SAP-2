@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: trello-cello-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5001
+      - key: DATABASE_URL
+        fromDatabase:
+          name: trello_db
+          property: connectionString
+      - key: CLIENT_URL
+        sync: false   # Set manually in Render dashboard to your Vercel URL
+
+databases:
+  - name: trello_db
+    databaseName: trello_db_khiv
+    user: trello_user

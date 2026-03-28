@@ -1,0 +1,14 @@
+{
+  "framework": "nextjs",
+  "rootDirectory": "frontend",
+  "outputDirectory": ".next",
+  "installCommand": "npm install",
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "env": {
+    "NEXT_PUBLIC_API_URL": {
+      "description": "Your Render backend URL",
+      "value": "https://trello-cello-backend.onrender.com"
+    }
+  }
+}

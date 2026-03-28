@@ -1,0 +1,33 @@
+[1m[31m  [1m● [22m[1mDrag & Drop / Card Move (Integration & Logic) › 3. Trigger DB Transaction Failure & Verify Rollback Simulation[39m[22m
+
+    thrown: "Exceeded timeout of 60000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+[2m[22m
+[2m    [0m [90m 46 |[39m   })[33m;[39m[22m
+[2m     [90m 47 |[39m[22m
+[2m    [31m[1m>[22m[2m[39m[90m 48 |[39m   it([32m'3. Trigger DB Transaction Failure & Verify Rollback Simulation'[39m[33m,[39m [36masync[39m () [33m=>[39m {[22m
+[2m     [90m    |[39m   [31m[1m^[22m[2m[39m[22m
+[2m     [90m 49 |[39m     [36mconst[39m mockClient [33m=[39m {[22m
+[2m     [90m 50 |[39m       query[33m:[39m jest[33m.[39mfn()[33m.[39mmockImplementation((q) [33m=>[39m {[22m
+[2m     [90m 51 |[39m         [36mif[39m (q [33m===[39m [32m'BEGIN'[39m) [36mreturn[39m [33mPromise[39m[33m.[39mresolve()[33m;[39m[0m[22m
+[2m[22m
+[2m      [2mat it ([22m[2m[0m[36mtests/card_move.test.js[39m[0m[2m:48:3)[22m[2m[22m
+[2m      [2mat Object.describe ([22m[2m[0m[36mtests/card_move.test.js[39m[0m[2m:6:1)[22m[2m[22m
+
+[1m[31m  [1m● [22m[1mLists API Integration Tests › PUT /lists/reorder - Should reorder lists[39m[22m
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m200[39m
+    Received: [31m404[39m
+[2m[22m
+[2m    [0m [90m 36 |[39m       [33m.[39msend({ listId[33m,[39m newPosition[33m:[39m [35m2.0[39m })[33m;[39m[22m
+[2m     [90m 37 |[39m     [22m
+[2m    [31m[1m>[22m[2m[39m[90m 38 |[39m     expect(reorderRes[33m.[39mstatusCode)[33m.[39mtoBe([35m200[39m)[33m;[39m[22m
+[2m     [90m    |[39m                                   [31m[1m^[22m[2m[39m[22m
+[2m     [90m 39 |[39m   })[33m;[39m[22m
+[2m     [90m 40 |[39m[22m
+[2m     [90m 41 |[39m   it([32m'DELETE /lists/:id - Should delete list with cards (Cascade check)'[39m[33m,[39m [36masync[39m () [33m=>[39m {[0m[22m
+[2m[22m
+[2m      [2mat Object.toBe ([22m[2m[0m[36mtests/list.test.js[39m[0m[2m:38:35)[22m[2m[22m
+
