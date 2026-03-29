@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { MoreVertical, Trash2, Calendar, ChevronRight, Star } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { getBoardBackground } from '@/lib/themes';
+import { cn } from '@/lib/utils';
 
 export default function BoardCard({ board, onDelete, onClick }) {
   const [isDeleting, setIsDeleting] = useState(false);
