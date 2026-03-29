@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
 
 /* ─── Light & Clean Premium System ───────────────────────────── */
 :root {
@@ -30,7 +30,7 @@
 
 [data-theme='dark'], .dark {
   --bg-app: #1d2125;        /* Trello dark background */
-  --bg-list: #101204;       
+  --bg-list: #101214;       
   --bg-card: #22272b;
   --bg-modal: #282e33;
   
@@ -80,39 +80,64 @@ html, body {
   background-clip: content-box;
 }
 
-/* Hide scrollbar utility */
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
 /* ─── Components ─────────────────────────────────────────────── */
 .input {
-  @apply w-full px-3 py-2 rounded-md border-2 border-slate-200 bg-white 
-         text-slate-900 text-sm outline-none transition-all
-         placeholder:text-slate-400 focus:border-blue-600;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  border-width: 2px;
+  border-color: #e2e8f0;
+  background-color: #ffffff;
+  color: #0f172a;
+  font-size: 0.875rem;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }
+.input::placeholder { color: #94a3b8; }
+.input:focus { border-color: #1d4ed8; }
 
 .btn {
-  @apply inline-flex items-center justify-center gap-2 px-3 py-1.5 rounded-md 
-         text-sm font-medium transition-all active:scale-95 disabled:opacity-50;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }
+.btn:active { transform: scale(0.95); }
+.btn:disabled { opacity: 0.5; }
 
 .btn-primary {
-  @apply bg-blue-700 text-white hover:bg-blue-800 shadow-sm;
+  background-color: #1d4ed8;
+  color: #ffffff;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
+.btn-primary:hover { background-color: #1e40af; }
 
 .btn-ghost {
-  @apply bg-transparent text-slate-700 hover:bg-black/5;
+  background-color: transparent;
+  color: #334155;
 }
+.btn-ghost:hover { background-color: rgba(0, 0, 0, 0.05); }
 
 .btn-danger {
-  @apply bg-red-700 text-white hover:bg-red-800;
+  background-color: #b91c1c;
+  color: #ffffff;
 }
+.btn-danger:hover { background-color: #991b1b; }
 
 /* ─── Board Canvas ───────────────────────────────────────────── */
 .momentum-scroll {
   overflow-x: auto;
   overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
 }
 
 /* ─── Glassmorphic Utilities ─────────────────────────────────── */

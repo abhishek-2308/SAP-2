@@ -16,6 +16,9 @@ if (process.env.NODE_ENV === 'production') {
 const pool = new Pool({
   connectionString,
   ssl,
+  max: 10,
+  connectionTimeoutMillis: 30000,
+  idleTimeoutMillis: 30000,
 });
 
 pool.on('connect', () => {

@@ -15,6 +15,7 @@ const cardDetailRoutes = require('./routes/cardDetailRoutes');
 const cardAttachmentRoutes = require('./routes/cardAttachmentRoutes');
 const errorHandler = require('./middleware/errorHandler');
 const path = require('path');
+const pool = require('./config/db');
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -80,10 +81,26 @@ app.use((req, res) => {
 app.use(errorHandler);
 
 // ─── Start ────────────────────────────────────────────────────
+const repairSchema = async () => {
+  console.log('🔍 Checking DB schema compatibility...');
+  try {
+    // Boards Table Fixes
+    await pool.query("ALTER TABLE boards ADD COLUMN IF NOT EXISTS background VARCHAR(100) DEFAULT 'default'");
+    await pool.query("ALTER TABLE boards ADD COLUMN IF NOT EXISTS is_starred BOOLEAN DEFAULT FALSE");
+    // Cards Table Fixes
+    await pool.query("ALTER TABLE cards ADD COLUMN IF NOT EXISTS theme VARCHAR(50) DEFAULT 'default'");
+    console.log('✅ DB Schema verified and patched.');
+  } catch (err) {
+    console.error('⚠️ DB Patch Error (Partial functionality might be limited):', err.message);
+  }
+};
+
 if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log(`🚀 Backend:  http://localhost:${PORT}`);
-    console.log(`📖 API Docs: http://localhost:${PORT}/api-docs`);
+  repairSchema().then(() => {
+    app.listen(PORT, () => {
+      console.log(`🚀 Backend:  http://localhost:${PORT}`);
+      console.log(`📖 API Docs: http://localhost:${PORT}/api-docs`);
+    });
   });
 }
 

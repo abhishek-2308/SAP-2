@@ -14,6 +14,8 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS boards (
   id SERIAL PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
+  background VARCHAR(100) DEFAULT 'default',
+  is_starred BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 -- ─── Lists ──────────────────────────────────────────────
@@ -32,6 +34,7 @@ CREATE TABLE IF NOT EXISTS cards (
   description TEXT,
   position DECIMAL(10, 5) NOT NULL DEFAULT 1.0,
   due_date TIMESTAMPTZ,
+  theme VARCHAR(50) DEFAULT 'default',
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 -- ─── Labels ─────────────────────────────────────────────

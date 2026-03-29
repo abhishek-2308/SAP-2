@@ -10,10 +10,18 @@ export default function Providers({ children }) {
     () =>
       new QueryClient({
         defaultOptions: {
-          queries: { staleTime: 1000 * 60, retry: 1 },
+          queries: { 
+            staleTime: 1000 * 60, 
+            retry: 1,
+            onError: (err) => {
+              const msg = err.response?.data?.error || err.message || err;
+              console.error('[Query Error]', msg);
+            }
+          },
           mutations: {
             onError: (err) => {
-              console.error('[Mutation Error]', err?.message || err);
+              const msg = err.response?.data?.error || err.message || err;
+              console.error('[Mutation Error]', msg);
             },
           },
         },
