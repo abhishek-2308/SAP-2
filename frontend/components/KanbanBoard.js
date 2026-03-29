@@ -148,6 +148,7 @@ export default function KanbanBoard({ boardId, highlightCardIds = null }) {
                 onUpdateList={(id, fields) => updateListMutation.mutateAsync({ id, ...fields })}
                 onOpenModal={setActiveCard}
                 onDeleteCard={id => deleteCardMutation.mutateAsync(id)}
+                onUpdateCardTheme={(cardId, theme) => updateCardMutation.mutateAsync({ id: cardId, theme })}
                 highlightCardIds={highlightCardIds}
               />
             ))}
@@ -156,23 +157,23 @@ export default function KanbanBoard({ boardId, highlightCardIds = null }) {
 
         <div className="flex-shrink-0 w-72">
           {addingList ? (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-[#ebedf0] p-4 rounded-2xl border border-slate-300 space-y-3 shadow-xl">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-white/20 dark:bg-black/30 backdrop-blur-xl p-4 rounded-2xl border border-white/25 space-y-3 shadow-xl">
               <input 
                 autoFocus 
                 type="text" 
                 value={newListTitle} 
                 onChange={e => setNewListTitle(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && newListTitle.trim() && (createListMutation.mutateAsync({ title: newListTitle.trim() }), setNewListTitle(''), setAddingList(false))}
-                className="w-full bg-white px-3 py-2 rounded-lg border-2 border-transparent focus:border-blue-600 outline-none text-sm font-bold shadow-inner" 
+                className="w-full bg-white/20 text-white placeholder:text-white/50 px-3 py-2 rounded-lg border border-white/20 focus:border-white/60 outline-none text-sm font-bold shadow-inner" 
                 placeholder="List Title..." 
               />
               <div className="flex gap-2">
-                <button onClick={() => newListTitle.trim() && (createListMutation.mutateAsync({ title: newListTitle.trim() }), setNewListTitle(''), setAddingList(false))} className="btn btn-primary flex-1 font-black uppercase tracking-widest text-[10px]">Add List</button>
-                <button onClick={() => setAddingList(false)} className="btn btn-ghost px-2 text-slate-500 hover:text-slate-900"><X size={20}/></button>
+                <button onClick={() => newListTitle.trim() && (createListMutation.mutateAsync({ title: newListTitle.trim() }), setNewListTitle(''), setAddingList(false))} className="flex-1 bg-white/90 hover:bg-white text-slate-900 font-black uppercase tracking-widest text-[10px] py-2 rounded-lg transition-all">Add List</button>
+                <button onClick={() => setAddingList(false)} className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all"><X size={20}/></button>
               </div>
             </motion.div>
           ) : (
-            <button onClick={() => setAddingList(true)} className="w-full h-12 bg-black/5 hover:bg-black/10 text-slate-700 font-black uppercase tracking-widest px-4 rounded-xl text-[11px] border-2 border-dashed border-slate-300 flex items-center justify-center gap-2 transition-all hover:border-slate-400 active:scale-[0.98]">
+            <button onClick={() => setAddingList(true)} className="w-full h-12 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white/80 hover:text-white font-black uppercase tracking-widest px-4 rounded-xl text-[11px] border-2 border-dashed border-white/20 hover:border-white/40 flex items-center justify-center gap-2 transition-all active:scale-[0.98]">
               <Plus size={18} /> Add another list
             </button>
           )}
@@ -181,12 +182,12 @@ export default function KanbanBoard({ boardId, highlightCardIds = null }) {
 
       <DragOverlay dropAnimation={dropAnimation}>
         {draggingCard && (
-          <div className="bg-white rounded-xl p-4 text-slate-800 text-[14px] font-black shadow-2xl border-2 border-blue-600 w-64 rotate-3 ring-4 ring-blue-600/20">
+          <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-xl p-4 text-slate-900 dark:text-white text-[14px] font-black shadow-2xl border-2 border-white w-64 rotate-2 ring-4 ring-white/30">
             {draggingCard.title}
           </div>
         )}
         {draggingList && (
-           <div className="flex-shrink-0 w-72 h-32 rounded-2xl bg-white/80 backdrop-blur-md border-2 border-blue-600 shadow-2xl flex items-center justify-center text-blue-700 font-black uppercase tracking-tighter text-lg rotate-2">
+           <div className="flex-shrink-0 w-72 h-32 rounded-2xl bg-white/20 backdrop-blur-xl border-2 border-white/40 shadow-2xl flex items-center justify-center text-white font-black uppercase tracking-tighter text-lg rotate-2">
               {draggingList.title}
            </div>
         )}
