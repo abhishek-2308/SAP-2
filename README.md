@@ -10,6 +10,14 @@
 
 ---
 
+## 🚀 Live Deployments
+
+*   **Frontend (Vercel)**: [https://trello-cello.vercel.app](https://trello-cello.vercel.app)
+*   **Backend (Render)**: [https://trello-cello-api.onrender.com](https://trello-cello-api.onrender.com)
+*   **API Documentation**: [https://trello-cello-api.onrender.com/api-docs](https://trello-cello-api.onrender.com/api-docs)
+
+---
+
 ## ✅ Assignment Requirements Coverage
 
 This project fully satisfies and exceeds the SDE Internship evaluation criteria through the following implementations:
@@ -103,13 +111,17 @@ cp backend/.env.example backend/.env
 # 3. Start development environment
 npm run dev
 ```
-
 ---
 
-## 🎤 Interview Talking Points
-*   **The Hardest Bug**: Resolving the "Ghost Storage Leak" by implementing an event-driven file cleanup system with BullMQ.
-*   **Key Challenge**: Managing complex cascading restores (Board → Lists → Cards) while maintaining atomic integrity in a non-relational visual state.
-*   **Next Steps**: I would implement a generic "Command Pattern" for Undo/Redo functionality and integrate Redis for real-time collaboration.
+## 🎤 Key Interview Insights
+
+### 🏆 The "Ghost Storage Leak" Bug
+**The Problem**: Cards with attachments would often be deleted from the database, but the physical files in the `uploads/` folder remained on the disk forever, leading to storage overflow.
+**The Solution**: Implemented an event-driven cleanup system using **BullMQ**. Now, when an item is permanently purged, a background job is queued to safely `unlink` the file from the filesystem.
+
+### 🏆 Cascading Lifecycle States
+**The Problem**: Restoring a board didn't previously restore its nested lists or cards, leaving the user with an empty board.
+**The Solution**: Developed a recursive transactional service that propagates `is_deleted = false` down the entire hierarchy, ensuring a board returns exactly as it was when trashed.
 
 ---
 
