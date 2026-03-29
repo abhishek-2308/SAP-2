@@ -1,6 +1,6 @@
-# 🎻 Trello Cello: Production-Grade Kanban System
+# Trello Cello: Kanban Project Management Tool
 
-> A high-performance, resilient Kanban application built for scale. Features modern architecture, optimistic UI, and a robust lifecycle management system.
+> A full-stack Trello-like Kanban application built using Next.js, Express, and PostgreSQL, focusing on clean architecture, smooth UX, and reliable data handling.
 
 [![Frontend](https://img.shields.io/badge/Frontend-Next.js_15-black?logo=next.js)](https://nextjs.org)
 [![Backend](https://img.shields.io/badge/Backend-Express.js-green?logo=express)](https://expressjs.com)
@@ -12,120 +12,147 @@
 
 ## 🚀 Live Deployments
 
-*   **Frontend (Vercel)**: [https://trello-cello.vercel.app](https://trello-cello.vercel.app)
-*   **Backend (Render)**: [https://trello-cello-api.onrender.com](https://trello-cello-api.onrender.com)
-*   **API Documentation**: [https://trello-cello-api.onrender.com/api-docs](https://trello-cello-api.onrender.com/api-docs)
+* **Frontend (Vercel)**: https://trello-abhishek.vercel.app
+* **API Docs**: https://trello-cello-api.onrender.com/api-docs
 
 ---
 
 ## ✅ Assignment Requirements Coverage
 
-This project fully satisfies and exceeds the SDE Internship evaluation criteria through the following implementations:
+This project implements all required features from the SDE Fullstack assignment.
 
-### 🛠️ Core Features
-*   **Board Management**: Full CRUD lifecycle (Create, Update, Archive, Soft-Delete, Restore). Implemented with unique `slug`-based routing and optimistic title updates.
-*   **List Management**: Dynamic list creation with **Collapsible UI**. Lists support horizontal drag-and-drop reordering using a fractional indexing algorithm.
-*   **Card Management**: Comprehensive task lifecycle. Cards support cross-list movement via **PostgreSQL Transactions** to ensure data atomicity.
-*   **Card Details**: Integrated modal featuring:
-    *   **Checklists**: Interactive "Mark as Completed" toggle with visual strike-through.
-    *   **Labels & Covers**: Custom theme selection (colors/gradients).
-    *   **Attachments**: Multi-file upload support with a background cleanup system.
-*   **Search & Filter**: Real-time frontend filtering combined with optimized backend indexed search ($O(log N)$ lookup).
+### 🛠 Core Features
 
-### 🌟 Bonus Features (100% Implemented)
-*   **Responsive Design**: Mobile-first grid layout that adapts from vertical mobile stacks to horizontal desktop Kanban strips.
-*   **Multiple Boards**: Dashboard view for managing hundreds of independent project boards.
-*   **Archive + Trash System**: Multi-stage data lifecycle. Items move to "Archive" (hide from board) or "Trash" (soft-delete with 30-day recovery window).
-*   **Background Customization**: Dynamic board backgrounds and list-level themes for visual organization.
-*   **Activity Log**: Backend-tracked timestamps for creation, updates, and deletions.
+* **Board Management**
+
+  * Create, view, update, archive, and delete boards
+  * Unique routing using slugs
+
+* **List Management**
+
+  * Create, edit, delete lists
+  * Drag-and-drop reordering (horizontal)
+
+* **Card Management**
+
+  * Create, edit, delete, archive cards
+  * Move cards across lists with consistent ordering
+
+* **Card Details**
+
+  * Labels, due dates, members
+  * Checklist with completion toggle
+  * Attachments and card covers
+
+* **Search & Filter**
+
+  * Search cards by title
+  * Filter using labels and metadata
 
 ---
 
-## 🧠 Engineering Decisions & Tradeoffs
+### 🌟 Bonus Features
 
-### 1. Fractional Indexing (Ordering Strategy)
-*   **Decision**: used `DECIMAL` (floating point) positions instead of integer ranks.
-*   **Why**: Conventional integer reordering requires $O(N)$ updates (shifting all subsequent items). Fractional indexing handles moves in **$O(1)$** by calculating `(prev + next) / 2`.
-*   **Tradeoff**: Potential precision limits after thousands of drops in the same spot (handled by a future re-normalization background task).
+* Responsive UI (mobile, tablet, desktop)
+* Multiple boards dashboard
+* Archive + Trash system (restore supported)
+* File attachments with cleanup handling
+* Activity logs for tracking changes
+* Board background and card customization
+* Keyboard accessibility (ESC, focus states)
 
-### 2. Optimistic UI & Server State
-*   **Decision**: Decoupled UI state (Zustand) from Server State (TanStack Query).
-*   **Why**: Provides a "snappy," zero-latency user experience. When a card is moved, the UI updates instantly, and the network request happens in the background.
-*   **Resilience**: Implemented **Snapshot Rollbacks**. If the backend fails (e.g., database timeout), the UI automatically reverts to the previous valid state.
+---
 
-### 3. Background File Cleanup (Event-Driven Architecture)
-*   **Decision**: Integrated **BullMQ** for permanent file deletion.
-*   **Why**: Deleting physical files from disk is an I/O-heavy operation that shouldn't block the API response. 
-*   **Stability**: If the API marks a board as "Permanently Deleted," a background worker handles the `fs.promises.unlink` calls. If a file is locked or missing, the worker retries automatically, ensuring the filesystem never drifts from the database.
+## 🧠 Key Engineering Decisions
 
-### 4. Controller → Service → Repository Pattern
-*   **Decision**: Strict architectural layering.
-*   **Why**: 
-    *   **Controllers**: Handle HTTP-specific logic (params, body, status codes).
-    *   **Services**: House complex business logic and cascading transactions (e.g., "Restore board → Restore all its lists").
-    *   **Repositories**: The only layer allowed to touch the database (SQL).
-*   **Benefit**: High testability via dependency injection and clean separation of concerns.
+### 1. Ordering Strategy
+
+* Used fractional indexing (`DECIMAL`)
+* Allows inserting items without reordering entire list
+* Improves performance for drag-and-drop operations
+
+---
+
+### 2. Optimistic UI
+
+* UI updates instantly before server response
+* Improves perceived performance
+* Rollback implemented on failure
+
+---
+
+### 3. Background File Cleanup
+
+* Attachments are deleted using background jobs (BullMQ)
+* Prevents API blocking and storage leaks
+
+---
+
+### 4. Backend Architecture
+
+* Controller → Service → Repository pattern
+* Separates HTTP logic, business logic, and database queries
+* Improves maintainability and testability
 
 ---
 
 ## 🏗️ System Design Considerations
 
-### Data Consistency
-To handle race conditions (e.g., two users moving the same card simultaneously), the backend uses **PostgreSQL Transactions**. The `moveCard` endpoint is atomic: either the card successfully settles in its new position, or the entire operation rolls back.
+* **Data Consistency**
 
-### Scalability
-*   **Database**: Added partial indices on `is_deleted` and `is_archived` columns. This prevents the "Trash" from slowing down active board queries.
-*   **I/O**: Used `fs.promises` instead of synchronous file operations to keep the Node.js event loop unblocked.
+  * Transactions used for card movement to avoid inconsistent states
+
+* **Scalability**
+
+  * Indexed queries for active vs deleted data
+  * Non-blocking file operations using async APIs
 
 ---
 
-## 🧪 Testing & Reliability
+## 🧪 Testing
 
-*   **Unit Tests**: Verified position calculation algorithms and state transition logic.
-*   **Integration Tests**: Simulated PostgreSQL transaction failures to verify client-side rollbacks.
-*   **E2E (Playwright)**: Full user journey testing — from creating a board to dragging a card across lists and verifying its presence in the Trash page.
+* Unit tests for core logic (ordering, state updates)
+* Integration tests for API behavior
+* End-to-end tests (Playwright) for user flows
 
 ---
 
 ## ♿ Accessibility & UX
-*   **Keyboard Navigation**: Full `ESC` key handling for modals and collapsible lists.
-*   **Visual Feedback**: Loading skeletons, hover states, and micro-animations (via Framer-like transitions) provide a premium feel.
-*   **Error Handling**: Global error boundary that logs mutation errors (e.g., `pool is not defined`) without crashing the application.
+
+* Keyboard navigation support (ESC, tab focus)
+* Clear focus indicators
+* Responsive layout for all screen sizes
 
 ---
 
 ## 🚩 Known Limitations
-*   **Real-time**: Currently uses a "Pull" model (auto-refetch). Future iterations would add WebSockets for multi-user collaboration.
-*   **Precision**: Extreme fractional indexing (millions of moves) may require a position re-normalization script.
+
+* No real-time sync (planned via WebSockets)
+* Ordering precision may need rebalancing after many operations
 
 ---
 
 ## 🚀 Quick Start
+
 ```bash
-# 1. Install dependencies
 npm run install:all
-
-# 2. Setup environment (Fill in .env with your PostgreSQL/Redis details)
 cp backend/.env.example backend/.env
-
-# 3. Start development environment
 npm run dev
 ```
----
-
-## 🎤 Key Interview Insights
-
-### 🏆 The "Ghost Storage Leak" Bug
-**The Problem**: Cards with attachments would often be deleted from the database, but the physical files in the `uploads/` folder remained on the disk forever, leading to storage overflow.
-**The Solution**: Implemented an event-driven cleanup system using **BullMQ**. Now, when an item is permanently purged, a background job is queued to safely `unlink` the file from the filesystem.
-
-### 🏆 Cascading Lifecycle States
-**The Problem**: Restoring a board didn't previously restore its nested lists or cards, leaving the user with an empty board.
-**The Solution**: Developed a recursive transactional service that propagates `is_deleted = false` down the entire hierarchy, ensuring a board returns exactly as it was when trashed.
 
 ---
 
-## 📄 Documentation Tags
-- [API Swagger Specs](http://localhost:5001/api-docs)
-- [Database Schema](backend/db/schema.sql)
-- [Architecture Deep Dive](docs/ARCHITECTURE.md)
+## 🎤 Interview Highlights
+
+* Implemented optimistic UI with rollback for better UX
+* Designed efficient ordering system using fractional indexing
+* Solved file storage leak using background cleanup jobs
+* Built a complete lifecycle system (archive, trash, restore)
+
+---
+
+## 📄 Documentation
+
+* API Docs: /api-docs
+* Database Schema: backend/db/schema.sql
+* Architecture: docs/ARCHITECTURE.md
