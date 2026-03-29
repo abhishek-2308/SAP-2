@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`KanbanCard - Component & UI Tests 4. Matches snapshot (Snapshot Testing UI layer) 1`] = `
+<div>
+  <div
+    class="
+        group relative
+        bg-[#22272b] rounded-lg p-3 mb-2
+        border-2 transition-all duration-150
+        cursor-pointer select-none card-shadow
+        border-transparent
+        opacity-100
+        hover:border-[var(--accent)]
+      "
+    style="opacity: 1;"
+  >
+    <p
+      class="text-[var(--text-heading)] text-sm font-medium leading-snug pr-5"
+    >
+      Automated QA Testing
+    </p>
+    <div
+      class="flex items-center justify-between mt-3"
+    >
+      <div
+        class="flex items-center gap-2"
+      >
+        <span
+          class="
+              inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded font-semibold
+              bg-emerald-900/40 text-emerald-300
+            "
+        >
+          📅 
+          1 May
+        </span>
+      </div>
+    </div>
+    <button
+      class=" absolute top-2 right-2 w-5 h-5 flex items-center justify-center rounded text-[var(--text-secondary)] hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all text-xs "
+      title="Delete card"
+    >
+      ✕
+    </button>
+  </div>
+</div>
+`;

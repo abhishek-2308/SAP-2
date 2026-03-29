@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+/* ─── Light & Clean Premium System ───────────────────────────── */
+:root {
+  /* Surfaces */
+  --bg-app: #f1f2f4;        /* Classic Trello light grey */
+  --bg-list: #ebedf0;       /* Trello list grey */
+  --bg-card: #ffffff;       /* Pure white cards */
+  --bg-modal: #ffffff;      
+  
+  /* Accents */
+  --accent: #0055cc;        /* Pure Trello Blue */
+  --accent-hover: #0747a6;
+  
+  /* Typography */
+  --text-primary: #172b4d;  /* Dark slate for text */
+  --text-secondary: #44546f;/* Muted for secondary */
+  --text-muted: #626f84;
+  
+  /* Borders & Shadows */
+  --border: #dcdfe4;
+  --card-shadow: 0 1px 1px #091e4240, 0 0 1px #091e424f;
+  --lift-shadow: 0 4px 8px -2px #091e4240, 0 0 1px #091e424f;
+  
+  /* Alerts */
+  --danger: #ae2e24;
+  --success: #1f845a;
+}
+
+/* ─── Global Reset ───────────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  /* Regular scrolling enabled */
+  overflow: auto; 
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* ─── Standard Visible Scrollbars ─────────────────────────────── */
+::-webkit-scrollbar { 
+  width: 12px; 
+  height: 12px; 
+}
+::-webkit-scrollbar-track { 
+  background: #00000014; 
+}
+::-webkit-scrollbar-thumb { 
+  background: #0000003d; 
+  border-radius: 10px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover { 
+  background: #00000052; 
+  background-clip: content-box;
+}
+
+/* ─── Utility ────────────────────────────────────────────────── */
+.input {
+  @apply w-full px-3 py-2 rounded-md border-2 border-slate-200 bg-white 
+         text-slate-900 text-sm outline-none transition-all
+         placeholder:text-slate-400 focus:border-blue-600;
+}
+
+.btn {
+  @apply inline-flex items-center justify-center gap-2 px-3 py-1.5 rounded-md 
+         text-sm font-medium transition-all active:scale-95 disabled:opacity-50;
+}
+
+.btn-primary {
+  @apply bg-blue-700 text-white hover:bg-blue-800 shadow-sm;
+}
+
+.btn-ghost {
+  @apply bg-transparent text-slate-700 hover:bg-black/5;
+}
+
+.btn-danger {
+  @apply bg-red-700 text-white hover:bg-red-800;
+}
+
+/* ─── Animations ─────────────────────────────────────────────── */
+.card-hover {
+  @apply hover:bg-slate-50 transition-colors;
+}
+
+.momentum-scroll {
+  /* Visible scroll enabled */
+  overflow-x: auto;
+  overflow-y: hidden;
+}
