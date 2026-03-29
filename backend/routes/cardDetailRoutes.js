@@ -231,6 +231,15 @@ router.delete('/checklist-items/:itemId', C.deleteChecklistItem);
 // ─── Activities ──────────────────────────────────────────────
 /**
  * @swagger
+ * /card-details/activities:
+ *   get:
+ *     summary: Get activity log (supports ?cardId or ?boardId query params)
+ *     tags: [Activities]
+ */
+router.get('/activities', C.getActivities);
+
+/**
+ * @swagger
  * /card-details/activities/{boardId}:
  *   get:
  *     summary: Get activity log for a board

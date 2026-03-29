@@ -1,8 +1,9 @@
 require('dotenv').config();
 const { Pool } = require('pg');
 
-// Provide a sensible default for local development. You can override with DATABASE_URL in .env
-const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/trello_cello';
+// IPv4 Forcing for Windows Stability: 35.227.164.209 is Oregon Render PG IP
+const RAW_URL = process.env.DATABASE_URL || 'postgresql://trello_user:uacAuDRNlvEq3WGYBwO0Dxzd5nFxPYTC@35.227.164.209/trello_db_khiv';
+const connectionString = RAW_URL.replace('dpg-d73o1qoule4c73el2tbg-a.oregon-postgres.render.com', '35.227.164.209');
 
 // Determine whether to use SSL. Use SSL in production or when DATABASE_URL points to a remote host.
 let ssl = false;
