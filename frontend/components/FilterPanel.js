@@ -62,7 +62,7 @@ export default function FilterPanel({ activeFilters, onFilterChange }) {
           transition-all border font-bold shadow-sm
           ${hasActive
             ? 'bg-blue-600 hover:bg-blue-700 text-white border-blue-700'
-            : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-300'
+            : 'bg-[var(--bg-card)] hover:bg-[var(--bg-list)] text-[var(--text-primary)] border-[var(--border)]'
           }
         `}
       >
@@ -73,21 +73,21 @@ export default function FilterPanel({ activeFilters, onFilterChange }) {
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-full mt-2 w-72 bg-white border border-slate-200 rounded-lg shadow-xl z-50 p-4 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-              <h4 className="text-slate-800 font-bold text-sm">Filter Cards</h4>
-              <button onClick={() => setOpen(false)} className="text-slate-400 hover:text-slate-700 p-1 hover:bg-slate-100 rounded">
+          <div className="absolute right-0 top-full mt-2 w-72 bg-[var(--bg-card)] border border-[var(--border)] rounded-lg shadow-xl z-50 p-4 space-y-4">
+            <div className="flex items-center justify-between border-b border-[var(--border)] pb-2">
+              <h4 className="text-[var(--text-primary)] font-bold text-sm">Filter Cards</h4>
+              <button onClick={() => setOpen(false)} className="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 hover:bg-[var(--bg-list)] rounded">
                 <X size={14} />
               </button>
             </div>
 
             <div className="space-y-3">
               <div>
-                <label className="text-[10px] font-bold text-slate-500 mb-1 block uppercase tracking-widest">Label</label>
+                <label className="text-[10px] font-bold text-[var(--text-secondary)] mb-1 block uppercase tracking-widest">Label</label>
                 <select 
                   value={selectedLabel} 
                   onChange={(e) => setSelectedLabel(e.target.value)}
-                  className="w-full text-sm bg-slate-50 border border-slate-300 rounded px-2 py-1.5 text-slate-800 outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 shadow-sm"
+                  className="w-full text-sm bg-[var(--bg-list)] border border-[var(--border)] rounded px-2 py-1.5 text-[var(--text-primary)] outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 shadow-sm"
                 >
                   <option value="">All Labels</option>
                   {labels.map((l) => <option key={l.id} value={l.id}>{l.name}</option>)}
@@ -95,11 +95,11 @@ export default function FilterPanel({ activeFilters, onFilterChange }) {
               </div>
 
               <div>
-                <label className="text-[10px] font-bold text-slate-500 mb-1 block uppercase tracking-widest">Member</label>
+                <label className="text-[10px] font-bold text-[var(--text-secondary)] mb-1 block uppercase tracking-widest">Member</label>
                 <select 
                   value={selectedMember} 
                   onChange={(e) => setSelectedMember(e.target.value)}
-                  className="w-full text-sm bg-slate-50 border border-slate-300 rounded px-2 py-1.5 text-slate-800 outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 shadow-sm"
+                  className="w-full text-sm bg-[var(--bg-list)] border border-[var(--border)] rounded px-2 py-1.5 text-[var(--text-primary)] outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 shadow-sm"
                 >
                   <option value="">All Members</option>
                   {users.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
@@ -107,18 +107,18 @@ export default function FilterPanel({ activeFilters, onFilterChange }) {
               </div>
 
               <div className="space-y-2 pt-2">
-                <label className="flex items-center gap-2 text-sm text-slate-700 font-medium cursor-pointer hover:bg-slate-50 p-1.5 -ml-1.5 rounded">
-                  <input type="checkbox" checked={hasDueDate} onChange={(e) => setHasDueDate(e.target.checked)} className="accent-blue-600 h-4 w-4 rounded border-slate-300" />
+                <label className="flex items-center gap-2 text-sm text-[var(--text-primary)] font-medium cursor-pointer hover:bg-[var(--bg-list)] p-1.5 -ml-1.5 rounded">
+                  <input type="checkbox" checked={hasDueDate} onChange={(e) => setHasDueDate(e.target.checked)} className="accent-blue-600 h-4 w-4 rounded border-[var(--border)]" />
                   Has due date
                 </label>
-                <label className="flex items-center gap-2 text-sm text-slate-700 font-medium cursor-pointer hover:bg-slate-50 p-1.5 -ml-1.5 rounded">
-                  <input type="checkbox" checked={overdue} onChange={(e) => setOverdue(e.target.checked)} className="accent-red-600 h-4 w-4 rounded border-slate-300" />
+                <label className="flex items-center gap-2 text-sm text-[var(--text-primary)] font-medium cursor-pointer hover:bg-[var(--bg-list)] p-1.5 -ml-1.5 rounded">
+                  <input type="checkbox" checked={overdue} onChange={(e) => setOverdue(e.target.checked)} className="accent-red-600 h-4 w-4 rounded border-[var(--border)]" />
                   Overdue only
                 </label>
               </div>
             </div>
 
-            <div className="flex gap-2 pt-3 border-t border-slate-200 mt-4">
+            <div className="flex gap-2 pt-3 border-t border-[var(--border)] mt-4">
               <button 
                 onClick={applyFilters} 
                 className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] uppercase tracking-widest py-2 rounded shadow-sm transition-colors"
@@ -127,7 +127,7 @@ export default function FilterPanel({ activeFilters, onFilterChange }) {
               </button>
               <button 
                 onClick={clearFilters} 
-                className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] uppercase tracking-widest py-2 rounded transition-colors border border-slate-300"
+                className="flex-1 bg-[var(--bg-list)] hover:bg-[var(--border)] text-[var(--text-primary)] font-bold text-[11px] uppercase tracking-widest py-2 rounded transition-colors border border-[var(--border)]"
               >
                 Reset
               </button>

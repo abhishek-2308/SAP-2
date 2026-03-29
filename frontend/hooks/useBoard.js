@@ -4,6 +4,7 @@ import {
   getBoardDetails,
   createBoard,
   deleteBoard,
+  updateBoard,
   createList,
   updateList,
   deleteList,
@@ -33,16 +34,30 @@ export function useBoardDetails(boardId) {
 export function useCreateBoard() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ title }) => createBoard(title),
+    mutationFn: ({ title, background }) => createBoard(title, background),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['boards'] }),
   });
 }
 
-export function useDeleteBoard() {
+export function useDeleteBoard(boardId) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id) => deleteBoard(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['boards'] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['boards'] });
+      if (boardId) queryClient.invalidateQueries({ queryKey: ['board', boardId] });
+    },
+  });
+}
+
+export function useUpdateBoard(boardId) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (fields) => updateBoard(boardId, fields),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['boards'] });
+      queryClient.invalidateQueries({ queryKey: ['board', boardId] });
+    },
   });
 }
 
@@ -50,7 +65,7 @@ export function useDeleteBoard() {
 export function useCreateList(boardId) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ title }) => createList(boardId, title),
+    mutationFn: ({ title, theme }) => createList(boardId, title, theme),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['board', boardId] }),
   });
 }
@@ -66,7 +81,7 @@ export function useDeleteList(boardId) {
 export function useUpdateList(boardId) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, title }) => updateList(id, title),
+    mutationFn: ({ id, title, theme }) => updateList(id, title, theme),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['board', boardId] }),
   });
 }
@@ -83,7 +98,7 @@ export function useReorderList(boardId) {
 export function useCreateCard(boardId) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ listId, title }) => createCard(listId, title),
+    mutationFn: ({ listId, title, theme }) => createCard(listId, title, theme),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['board', boardId] }),
   });
 }

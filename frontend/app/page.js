@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Layout, Plus, Search } from 'lucide-react';
+import { Layout, Plus, Search, Star } from 'lucide-react';
 import { useBoards, useCreateBoard, useDeleteBoard } from '@/hooks/useBoard';
 import BoardCard from '@/components/BoardCard';
 import ThemeToggle from '@/components/ThemeToggle';
@@ -93,11 +93,31 @@ export default function Home() {
       </header>
 
       <div className="max-w-6xl mx-auto px-6 py-12 space-y-12">
+        {/* Starred Boards Section */}
+        {boards?.some(b => b.is_starred) && !boardSearchQuery && (
+          <section className="space-y-6">
+            <div className="flex items-center gap-2 text-[var(--text-primary)]">
+               <Star size={20} className="text-amber-400 fill-amber-400" />
+               <h2 className="text-[13px] font-black tracking-widest uppercase text-[var(--text-secondary)]">Starred Boards</h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {boards.filter(b => b.is_starred).map((board) => (
+                 <BoardCard
+                   key={`starred-${board.id}`}
+                   board={board}
+                   onDelete={(id) => deleteBoardMutation.mutate(id)}
+                   onClick={(id) => router.push(`/board/${id}`)}
+                 />
+              ))}
+            </div>
+          </section>
+        )}
+
         <section className="space-y-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-[var(--text-primary)]">
                <Layout size={20} className="text-[var(--text-muted)]" />
-               <h2 className="text-[13px] font-black tracking-widest uppercase text-[var(--text-secondary)]">Personal Boards</h2>
+               <h2 className="text-[13px] font-black tracking-widest uppercase text-[var(--text-secondary)]">All Boards</h2>
             </div>
             {isLoading && <span className="text-[10px] text-[var(--text-muted)] font-bold uppercase tracking-widest animate-pulse">Loading...</span>}
           </div>

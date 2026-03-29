@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
 /* ─── Light & Clean Premium System ───────────────────────────── */
 :root {
@@ -27,6 +28,24 @@
   --success: #1f845a;
 }
 
+[data-theme='dark'], .dark {
+  --bg-app: #1d2125;        /* Trello dark background */
+  --bg-list: #101204;       
+  --bg-card: #22272b;
+  --bg-modal: #282e33;
+  
+  --accent: #579dff;        
+  --accent-hover: #85b8ff;
+  
+  --text-primary: #f7f8f9;
+  --text-secondary: #b6c2cf;
+  --text-muted: #8c9bab;
+  
+  --border: #333c44;
+  --card-shadow: 0 1px 1px #00000040, 0 0 1px #0000004f;
+  --lift-shadow: 0 4px 8px -2px #00000040, 0 0 1px #0000004f;
+}
+
 /* ─── Global Reset ───────────────────────────────────────────── */
 * {
   box-sizing: border-box;
@@ -36,31 +55,36 @@ html, body {
   height: 100%;
   background-color: var(--bg-app);
   color: var(--text-primary);
-  /* Regular scrolling enabled */
   overflow: auto; 
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ─── Standard Visible Scrollbars ─────────────────────────────── */
+/* ─── Scrollbars ─────────────────────────────────────────────── */
 ::-webkit-scrollbar { 
-  width: 12px; 
-  height: 12px; 
+  width: 8px; 
+  height: 8px; 
 }
 ::-webkit-scrollbar-track { 
-  background: #00000014; 
+  background: transparent; 
 }
 ::-webkit-scrollbar-thumb { 
-  background: #0000003d; 
-  border-radius: 10px;
-  border: 3px solid transparent;
+  background: rgba(0,0,0,0.2); 
+  border-radius: 99px;
+  border: 2px solid transparent;
   background-clip: content-box;
 }
 ::-webkit-scrollbar-thumb:hover { 
-  background: #00000052; 
+  background: rgba(0,0,0,0.35); 
   background-clip: content-box;
 }
 
-/* ─── Utility ────────────────────────────────────────────────── */
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ─── Components ─────────────────────────────────────────────── */
 .input {
   @apply w-full px-3 py-2 rounded-md border-2 border-slate-200 bg-white 
          text-slate-900 text-sm outline-none transition-all
@@ -84,13 +108,56 @@ html, body {
   @apply bg-red-700 text-white hover:bg-red-800;
 }
 
-/* ─── Animations ─────────────────────────────────────────────── */
-.card-hover {
-  @apply hover:bg-slate-50 transition-colors;
-}
-
+/* ─── Board Canvas ───────────────────────────────────────────── */
 .momentum-scroll {
-  /* Visible scroll enabled */
   overflow-x: auto;
   overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ─── Glassmorphic Utilities ─────────────────────────────────── */
+.glass {
+  background: rgba(255, 255, 255, 0.15);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-dark {
+  background: rgba(0, 0, 0, 0.2);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ─── Card cover animation ───────────────────────────────────── */
+.card-cover {
+  transition: height 0.2s ease;
+}
+
+/* ─── Animations ─────────────────────────────────────────────── */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+/* ─── Responsive Kanban ─────────────────────────────────────── */
+@media (max-width: 640px) {
+  .kanban-list {
+    width: 85vw !important;
+    min-width: 280px !important;
+  }
 }

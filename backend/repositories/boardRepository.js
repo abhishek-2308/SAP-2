@@ -48,18 +48,34 @@ const BoardRepository = {
     };
   },
 
-  async create(title) {
+  async create(title, background = 'default') {
     const { rows } = await pool.query(
-      'INSERT INTO boards (title) VALUES ($1) RETURNING *',
-      [title]
+      'INSERT INTO boards (title, background) VALUES ($1, $2) RETURNING *',
+      [title, background]
     );
     return rows[0];
   },
 
-  async update(id, title) {
+  async update(id, fields) {
+    const allowed = ['title', 'background', 'is_starred'];
+    const sets = [];
+    const values = [];
+    let idx = 1;
+
+    for (const key of allowed) {
+      if (fields[key] !== undefined) {
+        sets.push(`${key} = $${idx}`);
+        values.push(fields[key]);
+        idx++;
+      }
+    }
+
+    if (sets.length === 0) return null;
+    values.push(id);
+
     const { rows } = await pool.query(
-      'UPDATE boards SET title = $1 WHERE id = $2 RETURNING *',
-      [title, id]
+      `UPDATE boards SET ${sets.join(', ')} WHERE id = $${idx} RETURNING *`,
+      values
     );
     return rows[0];
   },

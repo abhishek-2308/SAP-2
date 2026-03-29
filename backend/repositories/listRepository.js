@@ -25,19 +25,24 @@ const ListRepository = {
     return parseFloat(rows[0].max_pos);
   },
 
-  async create(boardId, title, position) {
+  async create(boardId, title, position, theme = 'default') {
     const { rows } = await pool.query(
-      'INSERT INTO lists (board_id, title, position) VALUES ($1, $2, $3) RETURNING *',
-      [boardId, title, position]
+      'INSERT INTO lists (board_id, title, position, theme) VALUES ($1, $2, $3, $4) RETURNING *',
+      [boardId, title, position, theme]
     );
     return rows[0];
   },
 
-  async update(id, title) {
-    const { rows } = await pool.query(
-      'UPDATE lists SET title = $1 WHERE id = $2 RETURNING *',
-      [title, id]
-    );
+  async update(id, title, theme) {
+    let query = 'UPDATE lists SET title = $1';
+    const params = [title];
+    if (theme !== undefined) {
+      query += ', theme = $2';
+      params.push(theme);
+    }
+    query += ` WHERE id = $${params.length + 1} RETURNING *`;
+    params.push(id);
+    const { rows } = await pool.query(query, params);
     return rows[0];
   },
 

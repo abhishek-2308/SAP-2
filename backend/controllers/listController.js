@@ -3,8 +3,8 @@ const ListService = require('../services/listService');
 const ListController = {
   async create(req, res, next) {
     try {
-      const { boardId, title } = req.body;
-      const list = await ListService.createList(boardId, title);
+      const { boardId, title, theme } = req.body;
+      const list = await ListService.createList(boardId, title, theme);
       res.status(201).json({ success: true, data: list });
     } catch (err) {
       next(err);
@@ -13,7 +13,7 @@ const ListController = {
 
   async update(req, res, next) {
     try {
-      const list = await ListService.updateList(req.params.id, req.body.title);
+      const list = await ListService.updateList(req.params.id, req.body.title, req.body.theme);
       res.json({ success: true, data: list });
     } catch (err) {
       next(err);

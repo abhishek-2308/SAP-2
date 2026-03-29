@@ -2,9 +2,9 @@
 
 import { useEffect, useState, useCallback, use } from 'react';
 import Link from 'next/link';
-import { Search, ArrowLeft, MoreHorizontal, Palette } from 'lucide-react';
-import { useBoardDetails } from '@/hooks/useBoard';
-import { searchCards, updateBoardBackground } from '@/lib/api';
+import { Search, ArrowLeft, MoreHorizontal, Palette, Star, Settings, Trash2, Edit2, X } from 'lucide-react';
+import { useBoardDetails, useUpdateBoard, useDeleteBoard } from '@/hooks/useBoard';
+import { searchCards, updateBoard } from '@/lib/api';
 import useBoardStore from '@/store/boardStore';
 import KanbanBoard from '@/components/KanbanBoard';
 import SearchBar from '@/components/SearchBar';
@@ -13,19 +13,57 @@ import ThemeToggle from '@/components/ThemeToggle';
 import { getBoardBackground, BOARD_BACKGROUNDS } from '@/lib/themes';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
+
+function BoardSettingsModal({ board, onClose, onUpdate, onDelete }) {
+  const [title, setTitle] = useState(board.title);
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="relative bg-[var(--bg-card)] w-full max-w-sm rounded-[24px] shadow-2xl border border-[var(--border)] overflow-hidden">
+        <div className="p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-black uppercase tracking-widest text-[var(--text-secondary)]">Board Settings</h3>
+            <button onClick={onClose} className="text-[var(--text-muted)] hover:text-[var(--text-primary)]"><X size={18}/></button>
+          </div>
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest">Board Title</label>
+            <div className="flex gap-2">
+              <input value={title} onChange={e => setTitle(e.target.value)} className="flex-1 bg-[var(--bg-list)] border border-[var(--border)] rounded-xl px-3 py-2 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-600" />
+              <button onClick={() => onUpdate({ title })} className="bg-blue-600 text-white p-2 rounded-xl hover:bg-blue-700 transition-all"><Edit2 size={16}/></button>
+            </div>
+          </div>
+          <div className="pt-4 border-t border-[var(--border)]">
+             <button onClick={() => confirm('Permanently delete this board?') && onDelete()} className="w-full py-3 bg-red-50 dark:bg-red-900/20 text-red-600 hover:bg-red-600 hover:text-white transition-all rounded-xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2">
+               <Trash2 size={14} /> Delete Board
+             </button>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
 
 export default function BoardPage({ params }) {
   const unwrappedParams = use(params);
   const { id } = unwrappedParams;
 
+  const router = useRouter();
   const { data, error } = useBoardDetails(id);
   const setBoardData = useBoardStore((s) => s.setBoardData);
   const currentBoard = useBoardStore((s) => s.currentBoard);
   const queryClient = useQueryClient();
 
-  // Board background
+  const updateBoardMutation = useUpdateBoard(id);
+  const deleteBoardMutation = useDeleteBoard(id);
+
+  // Board UI state
   const [bgId, setBgId] = useState('default');
+  const [isStarred, setIsStarred] = useState(false);
   const [showBgPicker, setShowBgPicker] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const boardTheme = getBoardBackground(bgId);
 
   // --- Search & Filter State ---
@@ -38,13 +76,14 @@ export default function BoardPage({ params }) {
     if (data) {
       setBoardData(data);
       setBgId(data.background || 'default');
+      setIsStarred(data.is_starred || false);
     }
   }, [data, setBoardData]);
 
   const handleBgChange = async (newBgId) => {
     setBgId(newBgId);
     setShowBgPicker(false);
-    await updateBoardBackground(id, newBgId);
+    await updateBoard(id, { background: newBgId });
     queryClient.invalidateQueries({ queryKey: ['board', id] });
   };
 
@@ -100,8 +139,23 @@ export default function BoardPage({ params }) {
             </button>
           </Link>
           <div className="flex flex-col mt-1">
-            <h1 className="font-black text-white text-lg tracking-tight leading-none truncate max-w-xs drop-shadow">{currentBoard?.title || 'Loading...'}</h1>
-            <span className="text-[9px] font-black text-white/50 uppercase tracking-widest">{boardTheme.label}</span>
+            <h1 className="font-black text-white text-lg tracking-tight leading-none truncate max-w-xs drop-shadow">
+              {currentBoard?.title || 'Loading...'}
+            </h1>
+            <div className="flex items-center gap-2 mt-1">
+              <span className="text-[9px] font-black text-white/50 uppercase tracking-widest">{boardTheme.label}</span>
+              <button 
+                 onClick={async () => {
+                   const newVal = !isStarred;
+                   setIsStarred(newVal);
+                   await updateBoard(id, { is_starred: newVal });
+                   queryClient.invalidateQueries({ queryKey: ['board', id] });
+                 }}
+                 className={cn("p-1 rounded transition-all", isStarred ? "text-amber-400" : "text-white/30 hover:text-white")}
+              >
+                <Star size={12} className={isStarred ? "fill-amber-400" : ""} />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -166,11 +220,33 @@ export default function BoardPage({ params }) {
           </div>
 
           <ThemeToggle />
-          <button className="p-2 bg-white/10 hover:bg-white/20 text-white/80 hover:text-white rounded-md border border-white/10 transition-all">
-            <MoreHorizontal size={18} />
+          <button 
+            onClick={() => setShowSettings(true)}
+            className="p-2 bg-white/10 hover:bg-white/20 text-white/80 hover:text-white rounded-md border border-white/10 transition-all"
+          >
+            <Settings size={18} />
           </button>
         </div>
       </nav>
+
+      <AnimatePresence>
+        {showSettings && currentBoard && (
+          <BoardSettingsModal 
+            board={currentBoard} 
+            onClose={() => setShowSettings(false)} 
+            onUpdate={async (fields) => {
+              await updateBoardMutation.mutateAsync(fields);
+              setShowSettings(false);
+              toast.success('Board updated');
+            }}
+            onDelete={async () => {
+              await deleteBoardMutation.mutateAsync(id);
+              router.push('/');
+              toast.success('Board deleted');
+            }}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Standard Search Indicator */}
       {searchResults && (

@@ -3,8 +3,8 @@ const CardService = require('../services/cardService');
 const CardController = {
   async create(req, res, next) {
     try {
-      const { listId, title } = req.body;
-      const card = await CardService.createCard(listId, title);
+      const { listId, title, theme } = req.body;
+      const card = await CardService.createCard(listId, title, theme);
       res.status(201).json({ success: true, data: card });
     } catch (err) {
       next(err);
@@ -13,8 +13,8 @@ const CardController = {
 
   async update(req, res, next) {
     try {
-      const { title, description, due_date } = req.body;
-      const card = await CardService.updateCard(req.params.id, { title, description, due_date });
+      const { title, description, due_date, theme } = req.body;
+      const card = await CardService.updateCard(req.params.id, { title, description, due_date, theme });
       res.json({ success: true, data: card });
     } catch (err) {
       next(err);

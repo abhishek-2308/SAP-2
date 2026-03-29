@@ -17,18 +17,18 @@ const BoardService = {
     return data;
   },
 
-  async createBoard(title) {
+  async createBoard(title, background) {
     if (!title || title.trim() === '') {
       throw { status: 400, message: 'Title is required' };
     }
-    return BoardRepository.create(title.trim());
+    return BoardRepository.create(title.trim(), background);
   },
 
-  async updateBoard(id, title) {
-    if (!title || title.trim() === '') {
-      throw { status: 400, message: 'Title is required' };
+  async updateBoard(id, fields) {
+    if (fields.title && fields.title.trim() === '') {
+      throw { status: 400, message: 'Title cannot be empty' };
     }
-    const board = await BoardRepository.update(id, title.trim());
+    const board = await BoardRepository.update(id, fields);
     if (!board) throw { status: 404, message: 'Board not found' };
     return board;
   },

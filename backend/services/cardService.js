@@ -3,7 +3,7 @@ const ListRepository = require('../repositories/listRepository');
 const pool = require('../config/db');
 
 const CardService = {
-  async createCard(listId, title) {
+  async createCard(listId, title, theme) {
     if (!listId) throw { status: 400, message: 'listId is required' };
     if (!title || title.trim() === '') throw { status: 400, message: 'title is required' };
 
@@ -13,7 +13,7 @@ const CardService = {
     const maxPos = await CardRepository.getMaxPosition(listId);
     const position = maxPos + 1;
 
-    return CardRepository.create(listId, title.trim(), position);
+    return CardRepository.create(listId, title.trim(), position, theme);
   },
 
   async updateCard(id, fields) {

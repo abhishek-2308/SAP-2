@@ -25,17 +25,17 @@ const CardRepository = {
     return parseFloat(rows[0].max_pos);
   },
 
-  async create(listId, title, position) {
+  async create(listId, title, position, theme = 'default') {
     const { rows } = await pool.query(
-      'INSERT INTO cards (list_id, title, position) VALUES ($1, $2, $3) RETURNING *',
-      [listId, title, position]
+      'INSERT INTO cards (list_id, title, position, theme) VALUES ($1, $2, $3, $4) RETURNING *',
+      [listId, title, position, theme]
     );
     return rows[0];
   },
 
   async update(id, fields) {
     // Build dynamic SET clause for partial updates
-    const allowed = ['title', 'description', 'due_date'];
+    const allowed = ['title', 'description', 'due_date', 'theme'];
     const sets = [];
     const values = [];
     let idx = 1;

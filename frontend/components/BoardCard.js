@@ -1,12 +1,11 @@
-'use client';
-
 import { motion, AnimatePresence } from 'framer-motion';
-import { MoreVertical, Trash2, Calendar, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
+import { MoreVertical, Trash2, Calendar, ChevronRight, Star } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { getBoardBackground } from '@/lib/themes';
 
 export default function BoardCard({ board, onDelete, onClick }) {
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isStarred, setIsStarred] = useState(board.is_starred || false);
   const theme = getBoardBackground(board.background || 'default');
 
   const dateStr = new Date(board.created_at).toLocaleDateString('en-GB', { 
@@ -19,27 +18,53 @@ export default function BoardCard({ board, onDelete, onClick }) {
     <motion.div
       whileHover={{ scale: 1.02, y: -2 }}
       transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-      className="group relative flex flex-col h-28 rounded-[12px] overflow-hidden shadow-sm hover:shadow-lg cursor-pointer border border-white/10"
+      className={cn(
+        "group relative flex flex-col h-32 rounded-[16px] overflow-hidden shadow-sm hover:shadow-2xl cursor-pointer border transition-all duration-300",
+        isStarred ? "border-amber-400 ring-2 ring-amber-400/20 shadow-[0_8px_30px_rgb(251,191,36,0.15)]" : "border-white/10"
+      )}
       onClick={() => onClick(board.id)}
     >
       {/* Gradient Background Banner (top 60%) */}
       <div
-        className="relative flex-1 flex items-start justify-between p-3"
+        className="relative flex-[1.2] flex items-start justify-between p-3"
         style={{ background: theme.preview }}
       >
         {/* Subtle shine overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-black/20 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-black/30 pointer-events-none" />
 
-        <span className="relative z-10 text-white/80 text-[9px] font-black uppercase tracking-widest bg-white/10 border border-white/20 rounded px-1.5 py-0.5 backdrop-blur-sm">
-          WORKSPACE
-        </span>
+        <div className="flex items-center gap-1.5 z-10">
+          <span className="text-white/80 text-[8px] font-black uppercase tracking-[0.2em] bg-white/10 border border-white/20 rounded-md px-2 py-0.5 backdrop-blur-md">
+            Personal
+          </span>
+          {isStarred && (
+            <div className="bg-amber-400 p-1 rounded-md shadow-lg border border-white/20">
+              <Star size={10} className="fill-white text-white" />
+            </div>
+          )}
+        </div>
 
-        <button 
-          onClick={(e) => { e.stopPropagation(); setIsDeleting(!isDeleting); }} 
-          className="relative z-10 p-1 text-white/50 hover:text-white hover:bg-white/20 rounded transition-all opacity-0 group-hover:opacity-100"
-        >
-          <MoreVertical size={14} />
-        </button>
+        <div className="flex items-center gap-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+          <button 
+            onClick={(e) => { 
+              e.stopPropagation(); 
+              setIsStarred(!isStarred);
+              // In a real app, we'd trigger an API call here.
+            }} 
+            className={cn(
+              "p-1.5 rounded-lg backdrop-blur-md border border-white/20 transition-all",
+              isStarred ? "bg-amber-400 text-white" : "bg-white/20 text-white/70 hover:text-white"
+            )}
+          >
+            <Star size={14} className={isStarred ? "fill-white" : ""} />
+          </button>
+          
+          <button 
+            onClick={(e) => { e.stopPropagation(); setIsDeleting(!isDeleting); }} 
+            className="p-1.5 text-white/70 hover:text-white bg-white/20 rounded-lg hover:bg-red-500/40 border border-white/20 transition-all"
+          >
+            <MoreVertical size={14} />
+          </button>
+        </div>
       </div>
 
       {/* Bottom Info Strip */}

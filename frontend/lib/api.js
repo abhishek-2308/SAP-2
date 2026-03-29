@@ -8,22 +8,23 @@ const api = axios.create({
 
 // ─── Boards ──────────────────────────────────────────────────
 export const getBoards = () => api.get('/boards').then((r) => r.data.data);
-export const createBoard = (title) => api.post('/boards', { title }).then((r) => r.data.data);
+export const createBoard = (title, background) => api.post('/boards', { title, background }).then((r) => r.data.data);
+export const updateBoard = (id, fields) => api.patch(`/boards/${id}`, fields).then((r) => r.data.data);
 export const deleteBoard = (id) => api.delete(`/boards/${id}`);
 export const getBoardDetails = (id) => api.get(`/boards/${id}/details`).then((r) => r.data.data);
 
 // ─── Lists ───────────────────────────────────────────────────
-export const createList = (boardId, title) =>
-  api.post('/lists', { boardId, title }).then((r) => r.data.data);
-export const updateList = (id, title) =>
-  api.patch(`/lists/${id}`, { title }).then((r) => r.data.data);
+export const createList = (boardId, title, theme) =>
+  api.post('/lists', { boardId, title, theme }).then((r) => r.data.data);
+export const updateList = (id, title, theme) =>
+  api.patch(`/lists/${id}`, { title, theme }).then((r) => r.data.data);
 export const reorderList = (listId, newPosition) =>
   api.post('/lists/reorder', { listId, newPosition }).then((r) => r.data.data);
 export const deleteList = (id) => api.delete(`/lists/${id}`);
 
 // ─── Cards ───────────────────────────────────────────────────
-export const createCard = (listId, title) =>
-  api.post('/cards', { listId, title }).then((r) => r.data.data);
+export const createCard = (listId, title, theme) =>
+  api.post('/cards', { listId, title, theme }).then((r) => r.data.data);
 export const updateCard = (id, fields) =>
   api.patch(`/cards/${id}`, fields).then((r) => r.data.data);
 export const moveCard = (cardId, sourceListId, targetListId, newPosition) =>

@@ -2,7 +2,7 @@ const ListRepository = require('../repositories/listRepository');
 const BoardRepository = require('../repositories/boardRepository');
 
 const ListService = {
-  async createList(boardId, title) {
+  async createList(boardId, title, theme) {
     if (!boardId) throw { status: 400, message: 'boardId is required' };
     if (!title || title.trim() === '') throw { status: 400, message: 'title is required' };
 
@@ -12,12 +12,12 @@ const ListService = {
     const maxPos = await ListRepository.getMaxPosition(boardId);
     const position = maxPos + 1;
 
-    return ListRepository.create(boardId, title.trim(), position);
+    return ListRepository.create(boardId, title.trim(), position, theme);
   },
 
-  async updateList(id, title) {
+  async updateList(id, title, theme) {
     if (!title || title.trim() === '') throw { status: 400, message: 'title is required' };
-    const list = await ListRepository.update(id, title.trim());
+    const list = await ListRepository.update(id, title.trim(), theme);
     if (!list) throw { status: 404, message: 'List not found' };
     return list;
   },

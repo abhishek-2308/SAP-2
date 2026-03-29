@@ -30,7 +30,7 @@ const BoardController = {
 
   async create(req, res, next) {
     try {
-      const board = await BoardService.createBoard(req.body.title);
+      const board = await BoardService.createBoard(req.body.title, req.body.background);
       res.status(201).json({ success: true, data: board });
     } catch (err) {
       next(err);
@@ -39,7 +39,7 @@ const BoardController = {
 
   async update(req, res, next) {
     try {
-      const board = await BoardService.updateBoard(req.params.id, req.body.title);
+      const board = await BoardService.updateBoard(req.params.id, req.body);
       res.json({ success: true, data: board });
     } catch (err) {
       next(err);
