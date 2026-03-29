@@ -21,8 +21,38 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 
 // ─── Core Middleware ──────────────────────────────────────────
+
+// Fix for express-rate-limit on Render/Vercel
+app.set('trust proxy', 1);
+
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5173'
+];
+
+if (process.env.CLIENT_URL) {
+  // Add CLIENT_URL from env, stripping any trailing slash
+  allowedOrigins.push(process.env.CLIENT_URL.replace(/\/$/, ""));
+}
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  origin: (origin, callback) => {
+    // Allow non-browser requests (Postman, mobile apps, etc.)
+    if (!origin) return callback(null, true);
+    
+    const normalizedOrigin = origin.replace(/\/$/, "");
+    
+    // Check if it's explicitly allowed OR is a Vercel subdomain
+    const isAllowed = allowedOrigins.includes(normalizedOrigin) || 
+                      normalizedOrigin.endsWith('.vercel.app');
+
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      console.error(`🔴 CORS blocked request from: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 app.use(express.json());
