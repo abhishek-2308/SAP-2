@@ -3,7 +3,7 @@ const pool = require('../config/db');
 const ListRepository = {
   async getByBoard(boardId) {
     const { rows } = await pool.query(
-      'SELECT * FROM lists WHERE board_id = $1 ORDER BY position ASC',
+      'SELECT * FROM lists WHERE board_id = $1 AND is_deleted = false AND is_archived = false ORDER BY position ASC',
       [boardId]
     );
     return rows;
@@ -11,7 +11,7 @@ const ListRepository = {
 
   async getById(id) {
     const { rows } = await pool.query(
-      'SELECT * FROM lists WHERE id = $1',
+      'SELECT * FROM lists WHERE id = $1 AND is_deleted = false',
       [id]
     );
     return rows[0];
@@ -33,15 +33,14 @@ const ListRepository = {
     return rows[0];
   },
 
-  async update(id, title, theme) {
-    let query = 'UPDATE lists SET title = $1';
-    const params = [title];
-    if (theme !== undefined) {
-      query += ', theme = $2';
-      params.push(theme);
-    }
-    query += ` WHERE id = $${params.length + 1} RETURNING *`;
-    params.push(id);
+  async update(id, fields) {
+    const keys = Object.keys(fields);
+    if (keys.length === 0) return this.getById(id);
+    
+    const setClause = keys.map((key, index) => `${key} = $${index + 1}`).join(', ');
+    const params = [...Object.values(fields), id];
+    
+    const query = `UPDATE lists SET ${setClause} WHERE id = $${params.length} RETURNING *`;
     const { rows } = await pool.query(query, params);
     return rows[0];
   },

@@ -1,6 +1,8 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { MoreVertical, Trash2, Calendar, ChevronRight, Star } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { getBoardBackground } from '@/lib/themes';
 import { cn } from '@/lib/utils';
 
@@ -9,18 +11,35 @@ export default function BoardCard({ board, onDelete, onClick }) {
   const [isStarred, setIsStarred] = useState(board.is_starred || false);
   const theme = getBoardBackground(board.background || 'default');
 
-  const dateStr = new Date(board.created_at).toLocaleDateString('en-GB', { 
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
+    useSortable({ 
+      id: `board-${board.id}`, 
+      data: { type: 'board', board } 
+    });
+
+  const style = {
+    transform: CSS.Translate.toString(transform),
+    transition,
+    zIndex: isDragging ? 100 : 1,
+    opacity: isDragging ? 0.4 : 1,
+  };
+
+  const dateStr = board.created_at ? new Date(board.created_at).toLocaleDateString('en-GB', { 
     day: 'numeric', 
     month: 'short', 
     year: 'numeric' 
-  });
+  }) : 'New';
 
   return (
     <motion.div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
       whileHover={{ scale: 1.02, y: -2 }}
       transition={{ type: 'spring', stiffness: 400, damping: 25 }}
       className={cn(
-        "group relative flex flex-col h-32 rounded-[16px] overflow-hidden shadow-sm hover:shadow-2xl cursor-pointer border transition-all duration-300",
+        "group relative flex flex-col h-32 rounded-[16px] overflow-hidden shadow-sm hover:shadow-2xl cursor-grab active:cursor-grabbing border transition-all duration-300",
         isStarred ? "border-amber-400 ring-2 ring-amber-400/20 shadow-[0_8px_30px_rgb(251,191,36,0.15)]" : "border-white/10"
       )}
       onClick={() => onClick(board.id)}
@@ -46,10 +65,11 @@ export default function BoardCard({ board, onDelete, onClick }) {
 
         <div className="flex items-center gap-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
           <button 
+            onPointerDown={(e) => e.stopPropagation()}
             onClick={(e) => { 
               e.stopPropagation(); 
               setIsStarred(!isStarred);
-              // In a real app, we'd trigger an API call here.
+              // Board toggle star call usually here
             }} 
             className={cn(
               "p-1.5 rounded-lg backdrop-blur-md border border-white/20 transition-all",
@@ -60,6 +80,7 @@ export default function BoardCard({ board, onDelete, onClick }) {
           </button>
           
           <button 
+            onPointerDown={(e) => e.stopPropagation()}
             onClick={(e) => { e.stopPropagation(); setIsDeleting(!isDeleting); }} 
             className="p-1.5 text-white/70 hover:text-white bg-white/20 rounded-lg hover:bg-red-500/40 border border-white/20 transition-all"
           >
@@ -86,6 +107,7 @@ export default function BoardCard({ board, onDelete, onClick }) {
       <AnimatePresence>
         {isDeleting && (
           <motion.div
+            onPointerDown={(e) => e.stopPropagation()}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

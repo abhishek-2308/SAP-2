@@ -31,10 +31,46 @@ const CardController = {
     }
   },
 
-  async delete(req, res, next) {
+  async archive(req, res, next) {
     try {
-      await CardService.deleteCard(req.params.id);
-      res.json({ success: true, message: 'Card deleted' });
+      const card = await CardService.archiveCard(req.params.id);
+      res.json({ success: true, data: card });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async softDelete(req, res, next) {
+    try {
+      const card = await CardService.softDeleteCard(req.params.id);
+      res.json({ success: true, data: card, message: 'Card moved to trash' });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async restore(req, res, next) {
+    try {
+      const card = await CardService.restoreCard(req.params.id);
+      res.json({ success: true, data: card, message: 'Card restored' });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async permanentDelete(req, res, next) {
+    try {
+      await CardService.permanentDeleteCard(req.params.id);
+      res.json({ success: true, message: 'Card permanently deleted' });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async toggleComplete(req, res, next) {
+    try {
+      const card = await CardService.toggleComplete(req.params.id);
+      res.json({ success: true, data: card });
     } catch (err) {
       next(err);
     }

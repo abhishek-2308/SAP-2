@@ -87,9 +87,45 @@ router.patch('/:id', ListController.update);
 
 /**
  * @swagger
+ * /lists/{id}/archive:
+ *   patch:
+ *     summary: Toggle list archived state
+ *     tags: [Lists]
+ */
+router.patch('/:id/archive', ListController.archive);
+
+/**
+ * @swagger
+ * /lists/{id}/restore:
+ *   patch:
+ *     summary: Restore a soft-deleted list and its cards
+ *     tags: [Lists]
+ */
+router.patch('/:id/restore', ListController.restore);
+
+/**
+ * @swagger
  * /lists/{id}:
  *   delete:
- *     summary: Delete a list and cascade all its cards
+ *     summary: Soft delete a list (move to trash)
+ *     tags: [Lists]
+ */
+router.delete('/:id', ListController.softDelete);
+
+/**
+ * @swagger
+ * /lists/{id}/permanent:
+ *   delete:
+ *     summary: Permanently delete a list and its cards
+ *     tags: [Lists]
+ */
+router.delete('/:id/permanent', ListController.permanentDelete);
+
+/**
+ * @swagger
+ * /lists/{id}/toggle-collapse:
+ *   patch:
+ *     summary: Toggle list collapse state (UI layout persistence)
  *     tags: [Lists]
  *     parameters:
  *       - in: path
@@ -98,8 +134,12 @@ router.patch('/:id', ListController.update);
  *         schema: { type: integer }
  *     responses:
  *       200:
- *         description: List deleted
+ *         description: Updated list with new is_collapsed value
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/List'
  */
-router.delete('/:id', ListController.delete);
+router.patch('/:id/toggle-collapse', ListController.toggleCollapse);
 
 module.exports = router;

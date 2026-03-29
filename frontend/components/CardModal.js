@@ -3,12 +3,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
-import { Layout, X, Calendar, AlignLeft, CheckSquare, Users, Tag, Trash2, Plus, ArrowRight, Paperclip, FileText, Download, Check, Image } from 'lucide-react';
+import { Layout, X, Calendar, AlignLeft, CheckSquare, Users, Tag, Trash2, Plus, ArrowRight, Paperclip, FileText, Download, Check, Image as ImageIcon, Archive } from 'lucide-react';
 import { getCardLabels, getAllLabels, addCardLabel, removeCardLabel, getCardMembers, getAllUsers, assignCardMember, removeCardMember, getCardChecklists, createChecklist, addChecklistItem, toggleChecklistItem, deleteChecklistItem, getActivities, getAttachments, uploadAttachment, deleteAttachment } from '@/lib/api';
 import { CARD_THEMES, getCardTheme } from '@/lib/themes';
 import { cn } from '@/lib/utils';
 
-export default function CardModal({ card, onClose, onSave, onDelete }) {
+export default function CardModal({ card, onClose, onSave, onDelete, onArchive }) {
   const [title, setTitle] = useState(card?.title || '');
   const [description, setDescription] = useState(card?.description || '');
   const [dueDate, setDueDate] = useState(card?.due_date ? new Date(card.due_date).toISOString().split('T')[0] : '');
@@ -38,6 +38,13 @@ export default function CardModal({ card, onClose, onSave, onDelete }) {
   }, [card?.id]);
 
   useEffect(() => { loadDetails(); }, [loadDetails]);
+
+  // Handle ESC key to close modal
+  useEffect(() => {
+    const handleEsc = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [onClose]);
 
   const toggleLabel = async (lid) => {
     const active = labels.some(l => l.id === lid);
@@ -86,8 +93,16 @@ export default function CardModal({ card, onClose, onSave, onDelete }) {
         {/* Simple Header */}
         <div className="flex-none p-6 flex items-start justify-between bg-[var(--bg-card)] border-b border-[var(--border)]">
           <div className="flex-1 pr-6 flex items-center gap-3">
-            <Layout size={20} className="text-[var(--text-muted)] mt-1" />
-            <input type="text" value={title} onChange={e => setTitle(e.target.value)} className="w-full bg-transparent text-lg font-black text-[var(--text-primary)] hover:bg-[var(--bg-list)] focus:bg-[var(--bg-card)] focus:ring-2 focus:ring-blue-600 rounded px-2 py-1 outline-none transition-all placeholder:text-[var(--text-muted)]" />
+            <Layout size={20} className="text-[var(--text-muted)] mt-1 shrink-0" />
+            <div className="flex-1 flex flex-col gap-1">
+              <input type="text" value={title} onChange={e => setTitle(e.target.value)} className="w-full bg-transparent text-lg font-black text-[var(--text-primary)] hover:bg-[var(--bg-list)] focus:bg-[var(--bg-card)] focus:ring-2 focus:ring-blue-600 rounded px-2 py-1 outline-none transition-all placeholder:text-[var(--text-muted)]" />
+              {card.is_completed && (
+                <div className="flex items-center gap-1.5 px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full w-fit">
+                   <Check size={10} strokeWidth={4}/>
+                   <span className="text-[10px] font-black uppercase tracking-widest">Completed Task</span>
+                </div>
+              )}
+            </div>
           </div>
           <button onClick={onClose} className="p-2 text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-list)] rounded-lg transition-all"><X size={20}/></button>
         </div>
@@ -103,19 +118,20 @@ export default function CardModal({ card, onClose, onSave, onDelete }) {
         <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-white dark:bg-[#282e33]">
           {activeTab === 'cover' && (
             <div className="space-y-4">
-              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-2"><Image size={14}/> Card Cover Color</label>
+              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-2"><ImageIcon size={14}/> Card Cover Color</label>
               <div className="grid grid-cols-3 gap-3">
                 {CARD_THEMES.map((t) => (
                   <button
                     key={t.id}
                     onClick={() => setCardThemeId(t.id)}
-                    className="relative h-14 rounded-xl overflow-hidden border-2 transition-all group"
+                    className="relative h-14 rounded-xl overflow-hidden border-2 transition-all group focus-visible:ring-2 focus-visible:ring-blue-600 outline-none"
                     style={{
                       background: t.accent ? `linear-gradient(135deg, ${t.accent}dd, ${t.accent}55)` : '#f1f5f9',
                       borderColor: cardThemeId === t.id ? '#3b82f6' : 'transparent',
                       boxShadow: cardThemeId === t.id ? '0 0 0 3px rgba(59,130,246,0.3)' : undefined,
                     }}
                     title={t.label}
+                    aria-label={`Set card cover to ${t.label}`}
                   >
                     {cardThemeId === t.id && (
                       <div className="absolute inset-0 flex items-center justify-center">
@@ -312,12 +328,20 @@ export default function CardModal({ card, onClose, onSave, onDelete }) {
 
         {/* Footer */}
         <div className="flex-none p-4 px-6 border-t border-[var(--border)] bg-[var(--bg-card)] flex items-center justify-between shadow-2xl z-10">
-          <button 
-            onClick={async () => { if(confirm('Are you sure you want to delete this card?')) { await onDelete(card.id); toast.success('Evolution saved — card deleted'); } }} 
-            className="flex items-center gap-1.5 text-xs font-black uppercase tracking-widest text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/30 px-4 py-2 rounded-xl transition-all border border-transparent hover:border-red-100 dark:hover:border-red-900/50"
-          >
-            <Trash2 size={14}/> Delete Card
-          </button>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={async () => { if(confirm('Are you sure you want to delete this card?')) { await onDelete(card.id); toast.success('Evolution saved — card deleted'); } }} 
+              className="flex items-center gap-1.5 text-xs font-black uppercase tracking-widest text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/30 px-4 py-2 rounded-xl transition-all border border-transparent hover:border-red-100 dark:hover:border-red-900/50"
+            >
+              <Trash2 size={14}/> Delete Card
+            </button>
+            <button 
+              onClick={async () => { await onArchive(card.id); onClose(); toast.success('Card archived — visible via board menu'); }} 
+              className="flex items-center gap-1.5 text-xs font-black uppercase tracking-widest text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/30 px-4 py-2 rounded-xl transition-all border border-transparent hover:border-blue-100 dark:hover:border-blue-900/50"
+            >
+              <Archive size={14}/> Archive
+            </button>
+          </div>
           
           <div className="flex items-center gap-3">
             <button onClick={onClose} className="text-xs font-black uppercase tracking-widest text-slate-500 hover:text-slate-800 px-6 py-2 transition-all">Cancel</button>

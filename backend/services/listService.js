@@ -1,5 +1,6 @@
 const ListRepository = require('../repositories/listRepository');
 const BoardRepository = require('../repositories/boardRepository');
+const pool = require('../config/db');
 
 const ListService = {
   async createList(boardId, title, theme) {
@@ -17,9 +18,16 @@ const ListService = {
 
   async updateList(id, title, theme) {
     if (!title || title.trim() === '') throw { status: 400, message: 'title is required' };
-    const list = await ListRepository.update(id, title.trim(), theme);
+    const list = await ListRepository.update(id, { title: title.trim(), theme });
     if (!list) throw { status: 404, message: 'List not found' };
     return list;
+  },
+
+  async toggleCollapse(id) {
+    const list = await ListRepository.getById(id);
+    if (!list) throw { status: 404, message: 'List not found' };
+    
+    return ListRepository.update(id, { is_collapsed: !list.is_collapsed });
   },
 
   async reorderList(listId, newPosition) {
@@ -31,9 +39,41 @@ const ListService = {
     return list;
   },
 
-  async deleteList(id) {
+  async archiveList(id) {
     const list = await ListRepository.getById(id);
     if (!list) throw { status: 404, message: 'List not found' };
+    return ListRepository.update(id, { is_archived: !list.is_archived });
+  },
+
+  async softDeleteList(id) {
+    const list = await ListRepository.getById(id);
+    if (!list) throw { status: 404, message: 'List not found' };
+    
+    const deleteDate = new Date();
+    await BoardRepository.updateLifecycle('list', id, { is_deleted: true, deleted_at: deleteDate });
+    
+    // Cascade to cards
+    await pool.query('UPDATE cards SET is_deleted = true, deleted_at = $1 WHERE list_id = $2', [deleteDate, id]);
+    
+    return { id, is_deleted: true };
+  },
+
+  async restoreList(id) {
+    const { rows } = await pool.query('SELECT * FROM lists WHERE id = $1', [id]);
+    const list = rows[0];
+    if (!list) throw { status: 404, message: 'List not found' };
+
+    await BoardRepository.updateLifecycle('list', id, { is_deleted: false, deleted_at: null });
+    await pool.query('UPDATE cards SET is_deleted = false, deleted_at = null WHERE list_id = $1', [id]);
+
+    return { id, is_deleted: false };
+  },
+
+  async permanentDeleteList(id) {
+    const { rows } = await pool.query('SELECT * FROM lists WHERE id = $1', [id]);
+    const list = rows[0];
+    if (!list) throw { status: 404, message: 'List not found' };
+
     await ListRepository.delete(id);
   },
 };

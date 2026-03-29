@@ -7,10 +7,12 @@ import toast from 'react-hot-toast';
 import KanbanList from './KanbanList';
 import CardModal from './CardModal';
 import useBoardStore from '@/store/boardStore';
-import { useCreateList, useDeleteList, useUpdateList, useReorderList, useCreateCard, useDeleteCard, useMoveCard, useUpdateCard } from '@/hooks/useBoard';
+import { useCreateList, useDeleteList, useUpdateList, useReorderList, useCreateCard, useDeleteCard, useMoveCard, useUpdateCard, useToggleCardComplete, useToggleListCollapse, useArchiveEntity } from '@/hooks/useBoard';
+
+import { calculateNewPosition } from '@/lib/orderUtils';
 
 export default function KanbanBoard({ boardId, highlightCardIds = null }) {
-  const { lists, cards, currentBoard, moveCardOptimistic, rollbackCardMove } = useBoardStore();
+  const { lists, cards, currentBoard } = useBoardStore();
   
   const createListMutation = useCreateList(boardId);
   const deleteListMutation = useDeleteList(boardId);
@@ -21,6 +23,9 @@ export default function KanbanBoard({ boardId, highlightCardIds = null }) {
   const deleteCardMutation = useDeleteCard(boardId);
   const moveCardMutation = useMoveCard(boardId);
   const updateCardMutation = useUpdateCard(boardId);
+  const toggleCardCompleteMutation = useToggleCardComplete(boardId);
+  const toggleListCollapseMutation = useToggleListCollapse(boardId);
+  const archiveEntityMutation = useArchiveEntity(boardId);
 
   const [activeCard, setActiveCard] = useState(null);
   const [newListTitle, setNewListTitle] = useState('');
@@ -62,25 +67,23 @@ export default function KanbanBoard({ boardId, highlightCardIds = null }) {
       if (!overList || activeList.id === overList.id) return;
 
       const overIndex = lists.findIndex(l => l.id === overList.id);
-      let newPosition;
+      const prevList = lists[overIndex - 1];
+      const nextList = lists[overIndex + 1];
 
-      if (overIndex === 0) {
-        newPosition = lists[0].position / 2;
-      } else if (overIndex === lists.length - 1) {
-        newPosition = lists[lists.length - 1].position + 1;
+      // Calculate position based on relative neighbors
+      let newPosition;
+      const activeIdx = lists.findIndex(l => l.id === activeList.id);
+      
+      if (activeIdx < overIndex) {
+        // Dragging forward
+        newPosition = calculateNewPosition(lists[overIndex].position, lists[overIndex + 1]?.position);
       } else {
-        const activeIdx = lists.findIndex(l => l.id === activeList.id);
-        if (activeIdx < overIndex) {
-          // Dragging forward
-          newPosition = (lists[overIndex].position + (lists[overIndex + 1]?.position || lists[overIndex].position + 1)) / 2;
-        } else {
-          // Dragging backward
-          newPosition = (lists[overIndex - 1].position + lists[overIndex].position) / 2;
-        }
+        // Dragging backward
+        newPosition = calculateNewPosition(lists[overIndex - 1]?.position, lists[overIndex].position);
       }
 
       try {
-        await reorderListMutation.mutateAsync({ listId: activeList.id, newPosition });
+        reorderListMutation.mutate({ listId: activeList.id, newPosition });
         toast.success('List repositioned');
       } catch {
         toast.error('Failed to move list');
@@ -93,34 +96,42 @@ export default function KanbanBoard({ boardId, highlightCardIds = null }) {
       const activeId = String(active.id).replace('card-', '');
       const activeCardObj = active.data.current.card;
       let targetListId;
-      let newPosition = 1.0;
+      let newPosition;
 
       if (overType === 'list') {
         targetListId = over.data.current.listId;
         const targetCards = cards[targetListId] || [];
-        newPosition = targetCards.length > 0 ? targetCards[targetCards.length - 1].position + 1 : 1.0;
+        newPosition = calculateNewPosition(targetCards[targetCards.length - 1]?.position);
       } else if (overType === 'card') {
         const overCard = over.data.current.card;
         targetListId = overCard.list_id;
         const targetCards = cards[targetListId] || [];
         const overIndex = targetCards.findIndex((c) => c.id === overCard.id);
         
-        if (overIndex === 0) newPosition = targetCards[0].position / 2;
-        else if (overIndex === targetCards.length - 1) newPosition = targetCards[targetCards.length - 1].position + 1;
-        else newPosition = (targetCards[overIndex - 1].position + targetCards[overIndex].position) / 2;
+        // If dropping on itself or no change
+        if (activeId === String(overCard.id)) return;
+
+        const activeIdx = targetCards.findIndex(c => String(c.id) === activeId);
+        if (activeIdx !== -1 && activeIdx < overIndex) {
+          // Same list, moving down
+          newPosition = calculateNewPosition(targetCards[overIndex].position, targetCards[overIndex + 1]?.position);
+        } else {
+          // Different list or moving up
+          newPosition = calculateNewPosition(targetCards[overIndex - 1]?.position, targetCards[overIndex].position);
+        }
       }
 
       if (!targetListId) return;
-      if (activeCardObj.list_id === targetListId && activeCardObj.position === newPosition) return;
-
-      const originalCards = { ...cards };
-      moveCardOptimistic(activeId, activeCardObj.list_id, targetListId, newPosition);
       
       try {
-        await moveCardMutation.mutateAsync({ cardId: activeId, sourceListId: activeCardObj.list_id, targetListId, newPosition });
-      } catch {
-        rollbackCardMove(originalCards);
-        toast.error('Sync failed.');
+        moveCardMutation.mutate({ 
+          cardId: parseInt(activeId), 
+          sourceListId: activeCardObj.list_id, 
+          targetListId, 
+          newPosition 
+        });
+      } catch (err) {
+        toast.error('Failed to move card');
       }
     }
   }
@@ -149,6 +160,9 @@ export default function KanbanBoard({ boardId, highlightCardIds = null }) {
                 onOpenModal={setActiveCard}
                 onDeleteCard={id => deleteCardMutation.mutateAsync(id)}
                 onUpdateCardTheme={(cardId, theme) => updateCardMutation.mutateAsync({ id: cardId, theme })}
+                onToggleComplete={id => toggleCardCompleteMutation.mutateAsync(id)}
+                onToggleCollapse={id => toggleListCollapseMutation.mutateAsync(id)}
+                onArchive={id => archiveEntityMutation.mutateAsync({ type: 'list', id })}
                 highlightCardIds={highlightCardIds}
               />
             ))}
@@ -200,6 +214,7 @@ export default function KanbanBoard({ boardId, highlightCardIds = null }) {
             onClose={() => setActiveCard(null)} 
             onDelete={async (id) => { await deleteCardMutation.mutateAsync(id); setActiveCard(null); }}
             onSave={async fields => { await updateCardMutation.mutateAsync({ id: activeCard.id, ...fields }); setActiveCard(null); }} 
+            onArchive={id => archiveEntityMutation.mutateAsync({ type: 'card', id })}
           />
         )}
       </AnimatePresence>

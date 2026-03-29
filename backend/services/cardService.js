@@ -1,5 +1,7 @@
 const CardRepository = require('../repositories/cardRepository');
 const ListRepository = require('../repositories/listRepository');
+const CardAttachmentRepository = require('../repositories/cardAttachmentRepository');
+const queueService = require('./queueService');
 const pool = require('../config/db');
 
 const CardService = {
@@ -59,10 +61,50 @@ const CardService = {
     }
   },
 
-  async deleteCard(id) {
+  async archiveCard(id) {
     const card = await CardRepository.getById(id);
     if (!card) throw { status: 404, message: 'Card not found' };
+    return CardRepository.update(id, { is_archived: !card.is_archived });
+  },
+
+  async softDeleteCard(id) {
+    const card = await CardRepository.getById(id);
+    if (!card) throw { status: 404, message: 'Card not found' };
+    return CardRepository.update(id, { is_deleted: true, deleted_at: new Date() });
+  },
+
+  async restoreCard(id) {
+    // Restore even if it's currently marked as deleted
+    const { rows } = await pool.query('SELECT * FROM cards WHERE id = $1', [id]);
+    const card = rows[0];
+    if (!card) throw { status: 404, message: 'Card not found' };
+    return CardRepository.update(id, { is_deleted: false, deleted_at: null });
+  },
+
+  async permanentDeleteCard(id) {
+    // We check the DB directly because it might be marked as is_deleted = true
+    const { rows } = await pool.query('SELECT * FROM cards WHERE id = $1', [id]);
+    const card = rows[0];
+    if (!card) throw { status: 404, message: 'Card not found' };
+
+    try {
+      const attachments = await CardAttachmentRepository.getAttachments(id);
+      const filenames = attachments.map((att) => att.filename);
+      if (filenames.length > 0) {
+        queueService.add('cleanup-files', { filenames });
+      }
+    } catch (err) {
+      console.error(`⚠️ Queue Error for card ${id}:`, err.message);
+    }
+
     await CardRepository.delete(id);
+  },
+
+  async toggleComplete(id) {
+    const card = await CardRepository.getById(id);
+    if (!card) throw { status: 404, message: 'Card not found' };
+
+    return CardRepository.update(id, { is_completed: !card.is_completed });
   },
 };
 

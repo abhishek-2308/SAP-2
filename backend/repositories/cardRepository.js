@@ -3,7 +3,7 @@ const pool = require('../config/db');
 const CardRepository = {
   async getByList(listId) {
     const { rows } = await pool.query(
-      'SELECT * FROM cards WHERE list_id = $1 ORDER BY position ASC',
+      'SELECT * FROM cards WHERE list_id = $1 AND is_deleted = false AND is_archived = false ORDER BY position ASC',
       [listId]
     );
     return rows;
@@ -11,7 +11,7 @@ const CardRepository = {
 
   async getById(id) {
     const { rows } = await pool.query(
-      'SELECT * FROM cards WHERE id = $1',
+      'SELECT * FROM cards WHERE id = $1 AND is_deleted = false',
       [id]
     );
     return rows[0];
@@ -34,8 +34,7 @@ const CardRepository = {
   },
 
   async update(id, fields) {
-    // Build dynamic SET clause for partial updates
-    const allowed = ['title', 'description', 'due_date', 'theme'];
+    const allowed = ['title', 'description', 'due_date', 'theme', 'is_completed', 'position', 'is_archived', 'is_deleted', 'deleted_at'];
     const sets = [];
     const values = [];
     let idx = 1;

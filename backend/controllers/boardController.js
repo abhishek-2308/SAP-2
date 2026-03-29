@@ -46,10 +46,47 @@ const BoardController = {
     }
   },
 
-  async delete(req, res, next) {
+  async softDelete(req, res, next) {
     try {
-      await BoardService.deleteBoard(req.params.id);
-      res.json({ success: true, message: 'Board deleted' });
+      await BoardService.softDeleteBoard(req.params.id);
+      res.json({ success: true, message: 'Board moved to trash' });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async restore(req, res, next) {
+    try {
+      const board = await BoardService.restoreBoard(req.params.id);
+      res.json({ success: true, data: board, message: 'Board restored' });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async permanentDelete(req, res, next) {
+    try {
+      await BoardService.permanentDeleteBoard(req.params.id);
+      res.json({ success: true, message: 'Board permanently deleted' });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async getTrash(req, res, next) {
+    try {
+      const trash = await BoardService.getTrash();
+      res.json({ success: true, data: trash });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async reorder(req, res, next) {
+    try {
+      const { newPosition } = req.body;
+      const board = await BoardService.reorderBoard(req.params.id, newPosition);
+      res.json({ success: true, data: board });
     } catch (err) {
       next(err);
     }

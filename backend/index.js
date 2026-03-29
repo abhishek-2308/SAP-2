@@ -87,8 +87,27 @@ const repairSchema = async () => {
     // Boards Table Fixes
     await pool.query("ALTER TABLE boards ADD COLUMN IF NOT EXISTS background VARCHAR(100) DEFAULT 'default'");
     await pool.query("ALTER TABLE boards ADD COLUMN IF NOT EXISTS is_starred BOOLEAN DEFAULT FALSE");
+    await pool.query("ALTER TABLE boards ADD COLUMN IF NOT EXISTS position DECIMAL(10, 5) NOT NULL DEFAULT 1.0");
+    await pool.query("ALTER TABLE boards ADD COLUMN IF NOT EXISTS is_archived BOOLEAN DEFAULT FALSE");
+    await pool.query("ALTER TABLE boards ADD COLUMN IF NOT EXISTS is_deleted BOOLEAN DEFAULT FALSE");
+    await pool.query("ALTER TABLE boards ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMP NULL");
+    await pool.query("CREATE INDEX IF NOT EXISTS idx_boards_pos ON boards(position)");
+    await pool.query("CREATE INDEX IF NOT EXISTS idx_boards_lifecycle ON boards(is_deleted, is_archived)");
+
     // Cards Table Fixes
     await pool.query("ALTER TABLE cards ADD COLUMN IF NOT EXISTS theme VARCHAR(50) DEFAULT 'default'");
+    await pool.query("ALTER TABLE cards ADD COLUMN IF NOT EXISTS is_completed BOOLEAN DEFAULT FALSE");
+    await pool.query("ALTER TABLE cards ADD COLUMN IF NOT EXISTS is_archived BOOLEAN DEFAULT FALSE");
+    await pool.query("ALTER TABLE cards ADD COLUMN IF NOT EXISTS is_deleted BOOLEAN DEFAULT FALSE");
+    await pool.query("ALTER TABLE cards ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMP NULL");
+    await pool.query("CREATE INDEX IF NOT EXISTS idx_cards_lifecycle ON cards(is_deleted, is_archived)");
+
+    // Lists Table Fixes
+    await pool.query("ALTER TABLE lists ADD COLUMN IF NOT EXISTS is_collapsed BOOLEAN DEFAULT FALSE");
+    await pool.query("ALTER TABLE lists ADD COLUMN IF NOT EXISTS is_archived BOOLEAN DEFAULT FALSE");
+    await pool.query("ALTER TABLE lists ADD COLUMN IF NOT EXISTS is_deleted BOOLEAN DEFAULT FALSE");
+    await pool.query("ALTER TABLE lists ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMP NULL");
+    await pool.query("CREATE INDEX IF NOT EXISTS idx_lists_lifecycle ON lists(is_deleted, is_archived)");
     console.log('✅ DB Schema verified and patched.');
   } catch (err) {
     console.error('⚠️ DB Patch Error (Partial functionality might be limited):', err.message);

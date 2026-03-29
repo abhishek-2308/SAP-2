@@ -46,7 +46,7 @@ function CardThemePicker({ currentTheme, onSelect, onClose }) {
   );
 }
 
-export default function KanbanCard({ card, onOpenModal, onDeleteCard, onUpdateTheme, highlight = false }) {
+export default function KanbanCard({ card, onOpenModal, onDeleteCard, onToggleComplete, onUpdateTheme, highlight = false }) {
   const [showThemePicker, setShowThemePicker] = useState(false);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
@@ -112,10 +112,30 @@ export default function KanbanCard({ card, onOpenModal, onDeleteCard, onUpdateTh
             </div>
           )}
 
-          {/* Card Title */}
-          <p className="text-[13px] leading-snug font-semibold text-slate-800 break-words mb-2">
-            {card.title}
-          </p>
+          {/* Card Title & Checkbox */}
+          <div className="flex items-start gap-2 mb-2">
+            <button
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleComplete(card.id);
+              }}
+              className={cn(
+                "mt-0.5 flex-shrink-0 w-4 h-4 rounded border transition-all flex items-center justify-center",
+                card.is_completed 
+                  ? "bg-green-600 border-green-600 text-white" 
+                  : "border-slate-300 hover:border-slate-400 bg-white"
+              )}
+            >
+              {card.is_completed && <Check size={10} strokeWidth={4} />}
+            </button>
+            <p className={cn(
+              "text-[13px] leading-snug font-semibold transition-all break-words",
+              card.is_completed ? "text-slate-400 line-through" : "text-slate-800"
+            )}>
+              {card.title}
+            </p>
+          </div>
 
           {/* Metadata Row */}
           <div className="flex flex-wrap items-center gap-2 text-[11px] font-bold text-slate-500">

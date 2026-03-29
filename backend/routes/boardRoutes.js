@@ -30,6 +30,19 @@ const BoardController = require('../controllers/boardController');
  */
 router.get('/', BoardController.getAll);
 
+// Trash route MUST come before /:id routes to avoid being captured as a parameter
+/**
+ * @swagger
+ * /boards/trash:
+ *   get:
+ *     summary: Get all soft-deleted items across boards, lists, and cards
+ *     tags: [Boards]
+ *     responses:
+ *       200:
+ *         description: Trash collection
+ */
+router.get('/trash', BoardController.getTrash);
+
 /**
  * @swagger
  * /boards/{id}:
@@ -46,9 +59,6 @@ router.get('/', BoardController.getAll);
  *         description: Board object
  *       404:
  *         description: Board not found
- *         content:
- *           application/json:
- *             schema: { $ref: '#/components/schemas/ErrorResponse' }
  */
 router.get('/:id', BoardController.getById);
 
@@ -125,11 +135,12 @@ router.post('/', BoardController.create);
  */
 router.patch('/:id', BoardController.update);
 
+
 /**
  * @swagger
  * /boards/{id}:
  *   delete:
- *     summary: Delete a board (cascades all lists and cards)
+ *     summary: Soft delete a board (move to trash)
  *     tags: [Boards]
  *     parameters:
  *       - in: path
@@ -138,8 +149,59 @@ router.patch('/:id', BoardController.update);
  *         schema: { type: integer }
  *     responses:
  *       200:
- *         description: Board deleted
+ *         description: Board moved to trash
  */
-router.delete('/:id', BoardController.delete);
+router.delete('/:id', BoardController.softDelete);
+
+/**
+ * @swagger
+ * /boards/{id}/permanent:
+ *   delete:
+ *     summary: Permanent purge of a board and all its nested data
+ *     tags: [Boards]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer }
+ */
+router.delete('/:id/permanent', BoardController.permanentDelete);
+
+/**
+ * @swagger
+ * /boards/{id}/restore:
+ *   patch:
+ *     summary: Restore a soft-deleted board
+ *     tags: [Boards]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer }
+ */
+router.patch('/:id/restore', BoardController.restore);
+
+/**
+ * @swagger
+ * /boards/{id}/reorder:
+ *   patch:
+ *     summary: Update board position (for dashboard reordering)
+ *     tags: [Boards]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [newPosition]
+ *             properties:
+ *               newPosition: { type: number, example: 1.5 }
+ */
+router.patch('/:id/reorder', BoardController.reorder);
 
 module.exports = router;

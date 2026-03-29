@@ -30,10 +30,46 @@ const ListController = {
     }
   },
 
-  async delete(req, res, next) {
+  async archive(req, res, next) {
     try {
-      await ListService.deleteList(req.params.id);
-      res.json({ success: true, message: 'List deleted' });
+      const list = await ListService.archiveList(req.params.id);
+      res.json({ success: true, data: list });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async softDelete(req, res, next) {
+    try {
+      await ListService.softDeleteList(req.params.id);
+      res.json({ success: true, message: 'List moved to trash' });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async restore(req, res, next) {
+    try {
+      const list = await ListService.restoreList(req.params.id);
+      res.json({ success: true, data: list, message: 'List restored' });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async permanentDelete(req, res, next) {
+    try {
+      await ListService.permanentDeleteList(req.params.id);
+      res.json({ success: true, message: 'List permanently deleted' });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async toggleCollapse(req, res, next) {
+    try {
+      const list = await ListService.toggleCollapse(req.params.id);
+      res.json({ success: true, data: list });
     } catch (err) {
       next(err);
     }

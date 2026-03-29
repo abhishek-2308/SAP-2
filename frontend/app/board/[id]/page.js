@@ -19,6 +19,13 @@ import { cn } from '@/lib/utils';
 
 function BoardSettingsModal({ board, onClose, onUpdate, onDelete }) {
   const [title, setTitle] = useState(board.title);
+
+  useEffect(() => {
+    const handleEsc = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [onClose]);
+
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
@@ -131,19 +138,19 @@ export default function BoardPage({ params }) {
       style={{ background: boardTheme.preview }}
     >
       {/* Board Nav */}
-      <nav className="h-12 bg-black/20 backdrop-blur-md flex items-center justify-between px-4 border-b border-white/10 shrink-0 z-50">
-        <div className="flex items-center gap-4 w-1/3">
+      <nav className="min-h-[48px] bg-black/20 backdrop-blur-md flex flex-wrap items-center justify-between px-3 py-1.5 border-b border-white/10 shrink-0 z-50">
+        <div className="flex items-center gap-3">
           <Link href="/">
-            <button className="p-2 bg-white/10 hover:bg-white/20 text-white/80 hover:text-white rounded-md transition-all border border-white/10">
+            <button className="p-1.5 bg-white/10 hover:bg-white/20 text-white/80 hover:text-white rounded-md transition-all border border-white/10">
               <ArrowLeft size={16} />
             </button>
           </Link>
-          <div className="flex flex-col mt-1">
-            <h1 className="font-black text-white text-lg tracking-tight leading-none truncate max-w-xs drop-shadow">
+          <div className="flex flex-col">
+            <h1 className="font-black text-white text-[15px] sm:text-lg tracking-tight leading-none truncate max-w-[120px] sm:max-w-xs drop-shadow">
               {currentBoard?.title || 'Loading...'}
             </h1>
             <div className="flex items-center gap-2 mt-1">
-              <span className="text-[9px] font-black text-white/50 uppercase tracking-widest">{boardTheme.label}</span>
+              <span className="text-[8px] sm:text-[9px] font-black text-white/50 uppercase tracking-widest">{boardTheme.label}</span>
               <button 
                  onClick={async () => {
                    const newVal = !isStarred;
@@ -153,29 +160,28 @@ export default function BoardPage({ params }) {
                  }}
                  className={cn("p-1 rounded transition-all", isStarred ? "text-amber-400" : "text-white/30 hover:text-white")}
               >
-                <Star size={12} className={isStarred ? "fill-amber-400" : ""} />
+                <Star size={10} className={isStarred ? "fill-amber-400" : ""} />
               </button>
             </div>
           </div>
         </div>
 
-        {/* Center */}
-        <div className="flex-1 flex justify-center items-center">
-          <div className="flex items-center gap-2 p-1 px-2 bg-black/20 rounded-md border border-white/10 shadow-sm backdrop-blur-sm">
+        {/* Center - Responsive Search */}
+        <div className="order-3 sm:order-2 w-full sm:w-auto mt-2 sm:mt-0 flex justify-center items-center">
+          <div className="flex items-center gap-2 p-1 px-2 bg-black/20 rounded-lg border border-white/10 shadow-sm backdrop-blur-sm w-full sm:w-auto">
             <SearchBar query={searchQuery} onQueryChange={setSearchQuery} isSearching={isSearching} />
             <FilterPanel activeFilters={activeFilters} onFilterChange={setActiveFilters} />
           </div>
         </div>
 
         {/* Right */}
-        <div className="w-1/3 flex items-center justify-end gap-2">
-          {/* Background Picker Button */}
+        <div className="order-2 sm:order-3 flex items-center justify-end gap-1.5 sm:gap-2">
           <div className="relative">
             <button
               onClick={() => setShowBgPicker(!showBgPicker)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white/80 hover:text-white rounded-md border border-white/10 text-[11px] font-bold uppercase tracking-wider transition-all"
+              className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white/80 hover:text-white rounded-md border border-white/10 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all"
             >
-              <Palette size={13} /> Background
+              <Palette size={13} /> <span className="hidden xs:inline">Background</span>
             </button>
 
             <AnimatePresence>
@@ -212,7 +218,6 @@ export default function BoardPage({ params }) {
                         </button>
                       ))}
                     </div>
-                    <p className="text-[9px] text-[var(--text-muted)] mt-2 px-1 font-medium">Selected: <span className="font-bold">{boardTheme.label}</span></p>
                   </motion.div>
                 </>
               )}

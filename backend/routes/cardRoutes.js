@@ -105,21 +105,52 @@ router.patch('/:id', CardController.update);
 
 /**
  * @swagger
- * /cards/{id}:
- *   delete:
- *     summary: Delete a card permanently
+ * /cards/{id}/toggle-complete:
+ *   patch:
+ *     summary: Toggle card completed state
  *     tags: [Cards]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema: { type: integer }
- *     responses:
- *       200:
- *         description: Card deleted
- *       404:
- *         description: Card not found
  */
-router.delete('/:id', CardController.delete);
+router.patch('/:id/toggle-complete', CardController.toggleComplete);
+
+/**
+ * @swagger
+ * /cards/{id}/archive:
+ *   patch:
+ *     summary: Toggle card archived state
+ *     tags: [Cards]
+ */
+router.patch('/:id/archive', CardController.archive);
+
+/**
+ * @swagger
+ * /cards/{id}/restore:
+ *   patch:
+ *     summary: Restore a soft-deleted card from trash
+ *     tags: [Cards]
+ */
+router.patch('/:id/restore', CardController.restore);
+
+/**
+ * @swagger
+ * /cards/{id}:
+ *   delete:
+ *     summary: Soft delete a card (move to trash)
+ *     tags: [Cards]
+ */
+router.delete('/:id', CardController.softDelete);
+
+/**
+ * @swagger
+ * /cards/{id}/permanent:
+ *   delete:
+ *     summary: Permanently delete a card and its attachments
+ *     tags: [Cards]
+ */
+router.delete('/:id/permanent', CardController.permanentDelete);
 
 module.exports = router;
