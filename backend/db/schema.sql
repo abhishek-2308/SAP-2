@@ -87,6 +87,17 @@ CREATE TABLE IF NOT EXISTS activities (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- ─── Attachments ─────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS attachments (
+  id            SERIAL PRIMARY KEY,
+  card_id       INTEGER NOT NULL REFERENCES cards(id) ON DELETE CASCADE,
+  filename      VARCHAR(255) NOT NULL,
+  original_name VARCHAR(255) NOT NULL,
+  mime_type     VARCHAR(100),
+  size          INTEGER,
+  created_at    TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- ─── Indexes ────────────────────────────────────────────
 -- From LLD §11: Performance Optimization
 CREATE INDEX IF NOT EXISTS ix_cards_pos              ON cards(list_id, position);
@@ -94,3 +105,4 @@ CREATE INDEX IF NOT EXISTS idx_lists_board_position  ON lists(board_id, position
 CREATE INDEX IF NOT EXISTS idx_card_labels_card      ON card_labels(card_id);
 CREATE INDEX IF NOT EXISTS idx_card_members_card     ON card_members(card_id);
 CREATE INDEX IF NOT EXISTS idx_checklist_items_list  ON checklist_items(checklist_id);
+CREATE INDEX IF NOT EXISTS idx_attachments_card      ON attachments(card_id);

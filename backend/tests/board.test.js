@@ -1,5 +1,6 @@
 const request = require('supertest');
 const app = require('../index');
+const pool = require('../config/db');
 const BoardService = require('../services/boardService');
 
 describe('Board API & DB Tests', () => {

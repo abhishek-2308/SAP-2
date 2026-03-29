@@ -1,0 +1,106 @@
+  console.log
+    ??? PostgreSQL connected
+
+      at BoundPool.log (config/db.js:22:11)
+
+[0mPOST /cards/move [32m200[0m 1527.744 ms - 169[0m
+  console.log
+    ??? PostgreSQL connected
+
+      at BoundPool.log (config/db.js:22:11)
+
+node.exe : FAIL 
+tests/card_move.test.js 
+(68.439 s)
+At C:\Users\shubh\AppData
+\Roaming\npm\npx.ps1:24 
+char:5
++     & "node$exe"  "$bas
+edir/node_modules/npm/bin
+/npx-cli.js" $args
++     ~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
+    + CategoryInfo       
+       : NotSpecified:   
+  (FAIL tests/card_mov   
+ e.test.js (68.439 s)    
+:String) [], RemoteE    
+xception
+    + FullyQualifiedErro 
+   rId : NativeCommandE  
+  rror
+ 
+  Drag & Drop / Card 
+Move (Integration & 
+Logic)
+    ??? 1. Throws 400 if 
+required move parameters 
+are missing (3 ms)
+    ??? 2. Drag card 
+across lists 
+(Integration Check) 
+(1561 ms)
+    ?? 3. Trigger DB 
+Transaction Failure & 
+Verify Rollback 
+Simulation (60000 ms)
+
+  ??? Drag & Drop / Card 
+Move (Integration & 
+Logic) ??? 3. Trigger DB 
+Transaction Failure & 
+Verify Rollback 
+Simulation
+
+    thrown: "Exceeded 
+timeout of 60000 ms for 
+a test.
+    Add a timeout value 
+to this test to increase 
+the timeout, if this is 
+a long-running test. See 
+https://jestjs.io/docs/ap
+i#testname-fn-timeout."
+
+      53 |   });
+      54 |
+    > 55 |   it('3. 
+Trigger DB Transaction 
+Failure & Verify 
+Rollback Simulation', 
+async () => {
+         |   ^
+      56 |     // Spy on 
+pg pool to ensure 
+ROLLBACK is called.
+      57 |     // Use a 
+lightweight fake client 
+to avoid holding a real 
+DB connection open
+      58 |     // (which 
+can cause Jest 
+open-handle timeouts on 
+Windows/Render latency).
+
+      at it (tests/card_m
+ove.test.js:55:3)
+      at Object.describe 
+(tests/card_move.test.js:
+6:1)
+
+Test Suites: 1 failed, 1 
+total
+Tests:       1 failed, 2 
+passed, 3 total
+Snapshots:   0 total
+Time:        68.528 s
+Ran all test suites 
+matching /tests\\card_mov
+e.test.js/i.
+Force exiting Jest: Have 
+you considered using 
+`--detectOpenHandles` to 
+detect async operations 
+that kept running after 
+all tests finished?

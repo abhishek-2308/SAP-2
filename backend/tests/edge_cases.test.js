@@ -40,4 +40,8 @@ describe('Edge Case & Failure Handling Simulation', () => {
 
     await pool.query("DELETE FROM boards WHERE id = $1", [boardId]);
   });
+
+  afterAll(async () => {
+    await pool.end();
+  });
 });

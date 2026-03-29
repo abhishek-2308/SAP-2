@@ -12,7 +12,9 @@ const listRoutes = require('./routes/listRoutes');
 const cardRoutes = require('./routes/cardRoutes');
 const authRoutes = require('./routes/authRoutes');
 const cardDetailRoutes = require('./routes/cardDetailRoutes');
+const cardAttachmentRoutes = require('./routes/cardAttachmentRoutes');
 const errorHandler = require('./middleware/errorHandler');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -58,6 +60,10 @@ app.use('/boards', boardRoutes);
 app.use('/lists', listRoutes);
 app.use('/cards', cardRoutes);
 app.use('/card-details', cardDetailRoutes);
+app.use('/attachments', cardAttachmentRoutes);
+
+// Static for uploads
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 // ─── Health Check ─────────────────────────────────────────────

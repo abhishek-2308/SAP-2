@@ -121,18 +121,33 @@ const CardDetailRepository = {
 
   // ─── Activities ───────────────────────────────────────────
   async logActivity(boardId, cardId, action, details) {
+    let finalBoardId = boardId;
+    if (!finalBoardId && cardId) {
+      const res = await pool.query('SELECT board_id FROM lists JOIN cards ON lists.id = cards.list_id WHERE cards.id = $1', [cardId]);
+      if (res.rows[0]) finalBoardId = res.rows[0].board_id;
+    }
     const { rows } = await pool.query(
       'INSERT INTO activities (board_id, card_id, action, details) VALUES ($1, $2, $3, $4) RETURNING *',
-      [boardId, cardId, action, details ? JSON.stringify(details) : null]
+      [finalBoardId, cardId, action, details ? JSON.stringify(details) : null]
     );
     return rows[0];
   },
 
-  async getActivities(boardId, limit = 50) {
-    const { rows } = await pool.query(
-      'SELECT * FROM activities WHERE board_id = $1 ORDER BY created_at DESC LIMIT $2',
-      [boardId, limit]
-    );
+  async getActivities(boardId, cardId = null, limit = 50) {
+    let query = 'SELECT * FROM activities WHERE ';
+    const params = [];
+    if (cardId) {
+      query += 'card_id = $1 ';
+      params.push(cardId);
+    } else if (boardId) {
+      query += 'board_id = $1 ';
+      params.push(boardId);
+    } else {
+      return [];
+    }
+    query += 'ORDER BY created_at DESC LIMIT $' + (params.length + 1);
+    params.push(limit);
+    const { rows } = await pool.query(query, params);
     return rows;
   },
 

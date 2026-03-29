@@ -1,0 +1,458 @@
+node.exe : npm 
+verbose cli 
+C:\Program 
+Files\nodejs\node.exe 
+C:\Users\shubh\AppData
+\Roaming\npm\node_modu
+les\npm\bin\npm-cli.js
+At C:\Users\shubh\AppD
+ata\Roaming\npm\npm.ps
+1:24 char:5
++     & "node$exe"  "$
+basedir/node_modules/n
+pm/bin/npm-cli.js" 
+$args
++     ~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+~~
+    + CategoryInfo    
+          : NotSpeci  
+  fied: (npm verbos   
+ e cli...\bin\npm-    
+cli.js:String) []    
+, RemoteException
+    + FullyQualifiedE 
+   rrorId : NativeCo  
+  mmandError
+ 
+npm info using 
+npm@11.12.0
+npm info using 
+node@v23.9.0
+npm verbose title npm 
+run test
+npm verbose argv 
+"run" "test" 
+"--loglevel" 
+"verbose" "--no-color"
+npm verbose logfile 
+logs-max:10 dir:C:\Use
+rs\shubh\AppData\Local
+\npm-cache\_logs\2026-
+03-28T11_30_09_853Z-
+npm verbose logfile C:
+\Users\shubh\AppData\L
+ocal\npm-cache\_logs\2
+026-03-28T11_30_09_853
+Z-debug-0.log
+
+> trello-cello@1.0.0 test
+> concurrently "npm run test:backend" "npm run test:frontend"
+
+(node:29376) 
+[DEP0060] 
+DeprecationWarning: 
+The `util._extend` 
+API is deprecated. 
+Please use 
+Object.assign() 
+instead.
+(Use `node 
+--trace-deprecation 
+...` to show where 
+the warning was 
+created)
+[0] npm verbose cli C:\Program Files\nodejs\node.exe C:\Users\shubh\AppData\Roaming\npm\node_modules\npm\bin\npm-cli.js
+[0] npm info using npm@11.12.0
+[0] npm info using node@v23.9.0
+[0] npm verbose title npm run test:backend
+[0] npm verbose argv "run" "test:backend"
+[0] npm verbose logfile logs-max:10 dir:C:\Users\shubh\AppData\Local\npm-cache\_logs\2026-03-28T11_30_10_568Z-
+[0] npm verbose logfile C:\Users\shubh\AppData\Local\npm-cache\_logs\2026-03-28T11_30_10_568Z-debug-0.log
+[1] npm verbose cli C:\Program Files\nodejs\node.exe C:\Users\shubh\AppData\Roaming\npm\node_modules\npm\bin\npm-cli.js
+[1] npm info using npm@11.12.0
+[1] npm info using node@v23.9.0
+[1] npm verbose title npm run test:frontend
+[1] npm verbose argv "run" "test:frontend"
+[1] npm verbose logfile logs-max:10 dir:C:\Users\shubh\AppData\Local\npm-cache\_logs\2026-03-28T11_30_10_587Z-
+[1] npm verbose logfile C:\Users\shubh\AppData\Local\npm-cache\_logs\2026-03-28T11_30_10_587Z-debug-0.log
+[0] 
+[0] > trello-cello@1.0.0 test:backend
+[0] > cd backend && npx jest --runInBand
+[0] 
+[1] 
+[1] > trello-cello@1.0.0 test:frontend
+[1] > cd frontend && npx jest --runInBand
+[1] 
+[0] npm verbose cli C:\Program Files\nodejs\node.exe C:\Users\shubh\AppData\Roaming\npm\node_modules\npm\bin\npm-cli.js
+[0] npm info using npm@11.12.0
+[0] npm info using node@v23.9.0
+[0] npm verbose title npm exec jest --runInBand
+[0] npm verbose argv "exec" "--" "jest" "--runInBand"
+[0] npm verbose logfile logs-max:10 dir:C:\Users\shubh\AppData\Local\npm-cache\_logs\2026-03-28T11_30_10_941Z-
+[1] npm verbose cli C:\Program Files\nodejs\node.exe C:\Users\shubh\AppData\Roaming\npm\node_modules\npm\bin\npm-cli.js
+[1] npm info using npm@11.12.0
+[1] npm info using node@v23.9.0
+[0] npm verbose logfile C:\Users\shubh\AppData\Local\npm-cache\_logs\2026-03-28T11_30_10_941Z-debug-0.log
+[1] npm verbose title npm exec jest --runInBand
+[1] npm verbose argv "exec" "--" "jest" "--runInBand"
+[1] npm verbose logfile logs-max:10 dir:C:\Users\shubh\AppData\Local\npm-cache\_logs\2026-03-28T11_30_10_952Z-
+[1] npm verbose logfile C:\Users\shubh\AppData\Local\npm-cache\_logs\2026-03-28T11_30_10_952Z-debug-0.log
+[1] FAIL __tests__/KanbanCard.test.js
+[1]   ??? KanbanCard - Component & UI Tests ??? 2. Shows due date badge correctly (Component Data Layer)
+[1] 
+[1]     TestingLibraryElementError: Unable to find an element with the text: ????. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+[1] 
+[1]     Ignored nodes: comments, script, style
+[1]     [36m<body>[39m
+[1]       [36m<div>[39m
+[1]         [36m<div[39m
+[1]           [33mclass[39m=[32m"
+[1]             group relative
+[1]             bg-[#22272b] rounded-lg p-3 mb-2
+[1]             border-2 transition-all duration-150
+[1]             cursor-pointer select-none card-shadow
+[1]             border-transparent
+[1]             opacity-100
+[1]             hover:border-[var(--accent)]
+[1]           "[39m
+[1]           [33mstyle[39m=[32m"opacity: 1;"[39m
+[1]         [36m>[39m
+[1]           [36m<p[39m
+[1]             [33mclass[39m=[32m"text-[var(--text-heading)] text-sm font-medium leading-snug pr-5"[39m
+[1]           [36m>[39m
+[1]             [0mAutomated QA Testing[0m
+[1]           [36m</p>[39m
+[1]           [36m<div[39m
+[1]             [33mclass[39m=[32m"flex items-center justify-between mt-3"[39m
+[1]           [36m>[39m
+[1]             [36m<div[39m
+[1]               [33mclass[39m=[32m"flex items-center gap-2"[39m
+[1]             [36m>[39m
+[1]               [36m<span[39m
+[1]                 [33mclass[39m=[32m"
+[1]                   inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded font-semibold
+[1]                   bg-emerald-900/40 text-emerald-300
+[1]                 "[39m
+[1]               [36m>[39m
+[1]                 [0m???? [0m
+[1]                 [0m1 May[0m
+[1]               [36m</span>[39m
+[1]             [36m</div>[39m
+[1]           [36m</div>[39m
+[1]           [36m<button[39m
+[1]             [33mclass[39m=[32m" absolute top-2 right-2 w-5 h-5 flex items-center justify-center rounded text-[var(--text-secondary)] hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all text-xs "[39m
+[1]             [33mtitle[39m=[32m"Delete card"[39m
+[1]           [36m>[39m
+[1]             [0m???[0m
+[1]           [36m</button>[39m
+[1]         [36m</div>[39m
+[1]       [36m</div>[39m
+[1]     [36m</body>[39m
+[1] 
+[1]     [0m [90m 30 |[39m     render([33m<[39m[33mKanbanCard[39m card[33m=[39m{mockCard} onOpenModal[33m=[39m{jest[33m.[39mfn()} onDelete[33m=[39m{jest[33m.[39mfn()} [33m/[39m[33m>[39m)[33m;[39m
+[1]      [90m 31 |[39m     [90m// UI formats date as e.g. "1 May" (locale-dependent), so assert on the calendar icon.[39m
+[1]     [31m[1m>[22m[39m[90m 32 |[39m     expect(screen[33m.[39mgetByText([32m'????'[39m))[33m.[39mtoBeInTheDocument()[33m;[39m
+[1]      [90m    |[39m                   [31m[1m^[22m[39m
+[1]      [90m 33 |[39m   })[33m;[39m
+[1]      [90m 34 |[39m
+[1]      [90m 35 |[39m   it([32m'3. Triggers modal open onClick (User Interaction)'[39m[33m,[39m () [33m=>[39m {[0m
+[1] 
+[1]       at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+[1]       at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+[1]       at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+[1]       at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+[1]       at Object.getByText (__tests__/KanbanCard.test.js:32:19)
+[1] 
+[1]   ??? KanbanCard - Component & UI Tests ??? 4. Matches snapshot (Snapshot Testing UI layer)
+[1] 
+[1]     expect(received).toMatchSnapshot()
+[1] 
+[1]     Snapshot name: `KanbanCard - Component & UI Tests 4. Matches snapshot (Snapshot Testing UI layer) 1`
+[1] 
+[1]     - Snapshot  -  9
+[1]     + Received  + 25
+[1] 
+[1]     @@ -1,24 +1,40 @@
+[1]       <div>
+[1]         <div
+[1]     -     class=" group relative bg-[#22272b] rounded-lg p-3 mb-2 border border-transparent hover:border-[var(--accent)] cursor-pointer select-none card-shadow transition-all duration-150 "
+[1]     +     class="
+[1]     +         group relative
+[1]     +         bg-[#22272b] rounded-lg p-3 mb-2
+[1]     +         border-2 transition-all duration-150
+[1]     +         cursor-pointer select-none card-shadow
+[1]     +         border-transparent
+[1]     +         opacity-100
+[1]     +         hover:border-[var(--accent)]
+[1]     +       "
+[1]           style="opacity: 1;"
+[1]         >
+[1]           <p
+[1]             class="text-[var(--text-heading)] text-sm font-medium leading-snug pr-5"
+[1]           >
+[1]             Automated QA Testing
+[1]           </p>
+[1]     -     <span
+[1]     -       class="
+[1]     -           inline-block mt-2 text-xs px-2 py-0.5 rounded-full font-medium
+[1]     -           bg-emerald-900/40 text-emerald-300
+[1]     -         "
+[1]     +     <div
+[1]     +       class="flex items-center justify-between mt-3"
+[1]           >
+[1]     -       ???? 
+[1]     -       1/5/2026
+[1]     -     </span>
+[1]     +       <div
+[1]     +         class="flex items-center gap-2"
+[1]     +       >
+[1]     +         <span
+[1]     +           class="
+[1]     +               inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded font-semibold
+[1]     +               bg-emerald-900/40 text-emerald-300
+[1]     +             "
+[1]     +         >
+[1]     +           ???? 
+[1]     +           1 May
+[1]     +         </span>
+[1]     +       </div>
+[1]     +     </div>
+[1]           <button
+[1]             class=" absolute top-2 right-2 w-5 h-5 flex items-center justify-center rounded text-[var(--text-secondary)] hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all text-xs "
+[1]             title="Delete card"
+[1]           >
+[1]             ???
+[1] 
+[1]     [0m [90m 50 |[39m       [33m<[39m[33mKanbanCard[39m card[33m=[39m{mockCard} onOpenModal[33m=[39m{jest[33m.[39mfn()} onDelete[33m=[39m{jest[33m.[39mfn()} [33m/[39m[33m>[39m
+[1]      [90m 51 |[39m     )[33m;[39m
+[1]     [31m[1m>[22m[39m[90m 52 |[39m     expect(container)[33m.[39mtoMatchSnapshot()[33m;[39m
+[1]      [90m    |[39m                       [31m[1m^[22m[39m
+[1]      [90m 53 |[39m   })[33m;[39m
+[1]      [90m 54 |[39m })[33m;[39m
+[1]      [90m 55 |[39m[0m
+[1] 
+[1]       at Object.toMatchSnapshot (__tests__/KanbanCard.test.js:52:23)
+[1] 
+[1]  ??? 1 snapshot failed.
+[1] PASS __tests__/KanbanBoard.test.js
+[1] 
+[1] Snapshot Summary
+[1]  ??? 1 snapshot failed from 1 test suite. Inspect your code changes or run `npm run npx -- -u` to update them.
+[1] 
+[1] Test Suites: 1 failed, 1 passed, 2 total
+[1] Tests:       2 failed, 4 passed, 6 total
+[1] Snapshots:   1 failed, 1 passed, 2 total
+[1] Time:        2.183 s
+[1] Ran all test suites.
+[1] npm verbose cwd C:\Users\shubh\OneDrive\Desktop\trello_cello\frontend
+[1] npm verbose os Windows_NT 10.0.26200
+[1] npm verbose node v23.9.0
+[1] npm verbose npm  v11.12.0
+[1] npm verbose exit 1
+[1] npm verbose code 1
+[1] npm verbose cwd C:\Users\shubh\OneDrive\Desktop\trello_cello
+[1] npm verbose os Windows_NT 10.0.26200
+[1] npm verbose node v23.9.0
+[1] npm verbose npm  v11.12.0
+[1] npm verbose exit 1
+[1] npm verbose code 1
+[1] npm run test:frontend exited with code 1
+[0]   console.log
+[0]     ??? PostgreSQL connected
+[0] 
+[0]       at BoundPool.log (config/db.js:22:11)
+[0] 
+[0] [0mPOST /cards/move [32m200[0m 3742.877 ms - 169[0m
+[0]   console.log
+[0]     ??? PostgreSQL connected
+[0] 
+[0]       at BoundPool.log (config/db.js:22:11)
+[0] 
+[0] FAIL tests/card_move.test.js (70.303 s)
+[0]   Drag & Drop / Card Move (Integration & Logic)
+[0]     ??? 1. Throws 400 if required move parameters are missing (5 ms)
+[0]     ??? 2. Drag card across lists (Integration Check) (3786 ms)
+[0]     ?? 3. Trigger DB Transaction Failure & Verify Rollback Simulation (60006 ms)
+[0] 
+[0]   ??? Drag & Drop / Card Move (Integration & Logic) ??? 3. Trigger DB Transaction Failure & Verify Rollback Simulation
+[0] 
+[0]     thrown: "Exceeded timeout of 60000 ms for a test.
+[0]     Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+[0] 
+[0]     [0m [90m 53 |[39m   })[33m;[39m
+[0]      [90m 54 |[39m
+[0]     [31m[1m>[22m[39m[90m 55 |[39m   it([32m'3. Trigger DB Transaction Failure & Verify Rollback Simulation'[39m[33m,[39m [36masync[39m () [33m=>[39m {
+[0]      [90m    |[39m   [31m[1m^[22m[39m
+[0]      [90m 56 |[39m     [90m// Spy on pg pool to ensure ROLLBACK is called.[39m
+[0]      [90m 57 |[39m     [90m// Use a lightweight fake client to avoid holding a real DB connection open[39m
+[0]      [90m 58 |[39m     [90m// (which can cause Jest open-handle timeouts on Windows/Render latency).[39m[0m
+[0] 
+[0]       at it (tests/card_move.test.js:55:3)
+[0]       at Object.describe (tests/card_move.test.js:6:1)
+[0] 
+[0]   console.log
+[0]     ??? PostgreSQL connected
+[0] 
+[0]       at BoundPool.log (config/db.js:22:11)
+[0] 
+[0]   console.log
+[0]     Board details (1000 cards) fetched in: 1412ms
+[0] 
+[0]       at Object.log (tests/performance.test.js:37:13)
+[0] 
+[0] PASS tests/performance.test.js (10.752 s)
+[0]   Performance Stress Test (Large datasets)
+[0]     ??? GET /boards/:id/details - Load time benchmark (1416 ms)
+[0] 
+[0]   console.log
+[0]     ??? PostgreSQL connected
+[0] 
+[0]       at BoundPool.log (config/db.js:22:11)
+[0] 
+[0] [0mPOST /card-details/23782/add-label [32m201[0m 980.154 ms - 55[0m
+[0] [0mGET /card-details/23782/labels [32m200[0m 318.213 ms - 71[0m
+[0] [0mPOST /card-details/23782/assign-member [32m201[0m 988.014 ms - 54[0m
+[0] [0mPOST /card-details/23782/checklists [32m201[0m 959.730 ms - 123[0m
+[0] [0mPOST /card-details/checklists/20/items [32m201[0m 310.664 ms - 132[0m
+[0] [0mGET /card-details/search/144?labelId=24 [32m200[0m 370.163 ms - 166[0m
+[0] PASS tests/details.test.js (9.081 s)
+[0]   Card Details API Integration (Labels, Members, Checklists)
+[0]     ??? POST /card-details/:id/add-label - Should assign label to card (997 ms)
+[0]     ??? GET /card-details/:id/labels - Should fetch card labels (327 ms)
+[0]     ??? POST /card-details/:id/assign-member - Should assign user to card (995 ms)
+[0]     ??? POST /card-details/:id/checklists - Should create a checklist (966 ms)
+[0]     ??? POST /card-details/checklists/:id/items - Should add item to checklist (317 ms)
+[0]     ??? GET /card-details/search/:boardId - Should filter by label (690 ms)
+[0] 
+[0]   console.log
+[0]     ??? PostgreSQL connected
+[0] 
+[0]       at BoundPool.log (config/db.js:22:11)
+[0] 
+[0]   console.error
+[0]     [ERROR] GET /boards/999999: Board not found
+[0] 
+[0]     [0m [90m  5 |[39m [90m// eslint-disable-next-line no-unused-vars[39m
+[0]      [90m  6 |[39m [36mconst[39m errorHandler [33m=[39m (err[33m,[39m req[33m,[39m res[33m,[39m next) [33m=>[39m {
+[0]     [31m[1m>[22m[39m[90m  7 |[39m   console[33m.[39merror([32m`[ERROR] ${req.method} ${req.path}:`[39m[33m,[39m err[33m.[39mmessage [33m||[39m err)[33m;[39m
+[0]      [90m    |[39m           [31m[1m^[22m[39m
+[0]      [90m  8 |[39m
+[0]      [90m  9 |[39m   [36mconst[39m status [33m=[39m err[33m.[39mstatus [33m||[39m err[33m.[39mstatusCode [33m||[39m [35m500[39m[33m;[39m
+[0]      [90m 10 |[39m   [36mconst[39m message [33m=[39m err[33m.[39mmessage [33m||[39m [32m'Internal Server Error'[39m[33m;[39m[0m
+[0] 
+[0]       at error (middleware/errorHandler.js:7:11)
+[0]       at Layer.handle_error (node_modules/express/lib/router/layer.js:71:5)
+[0]       at trim_prefix (node_modules/express/lib/router/index.js:326:13)
+[0]       at node_modules/express/lib/router/index.js:286:9
+[0]       at Function.process_params (node_modules/express/lib/router/index.js:346:12)
+[0]       at next (node_modules/express/lib/router/index.js:280:10)
+[0]       at Layer.handle_error (node_modules/express/lib/router/layer.js:67:12)
+[0]       at trim_prefix (node_modules/express/lib/router/index.js:326:13)
+[0]       at node_modules/express/lib/router/index.js:286:9
+[0]       at Function.process_params (node_modules/express/lib/router/index.js:346:12)
+[0]       at next (node_modules/express/lib/router/index.js:280:10)
+[0]       at node_modules/express/lib/router/index.js:646:15
+[0]       at next (node_modules/express/lib/router/index.js:265:14)
+[0]       at next (node_modules/express/lib/router/route.js:141:14)
+[0]       at next (controllers/boardController.js:18:7)
+[0] 
+[0] [0mGET /boards/999999 [33m404[0m 1972.701 ms - 43[0m
+[0] [0mGET /boards/145/details [32m200[0m 879.399 ms - 128[0m
+[0] [0mPOST /cards/move [32m200[0m 1523.703 ms - 160[0m
+[0] [0mPOST /cards/move [32m200[0m 1697.532 ms - 160[0m
+[0] PASS tests/edge_cases.test.js (8.256 s)
+[0]   Edge Case & Failure Handling Simulation
+[0]     ??? GET /boards/:id - Should return 404 for non-existent board (1982 ms)
+[0]     ??? GET /boards/:id/details - Should handle empty board correctly (no lists/cards) (1489 ms)
+[0]     ??? Duplicate Actions - Should handle idempotent list/card movement if possible, or graceful error (4454 ms)
+[0] 
+[0]   console.log
+[0]     ??? PostgreSQL connected
+[0] 
+[0]       at BoundPool.log (config/db.js:22:11)
+[0] 
+[0] [0mPOST /lists [32m201[0m 942.102 ms - 126[0m
+[0] [0mPOST /lists [32m201[0m 919.543 ms - 125[0m
+[0] [0mPOST /lists/reorder [32m200[0m 338.260 ms - 126[0m
+[0] [0mDELETE /lists/359 [32m200[0m 587.490 ms - 41[0m
+[0] PASS tests/list.test.js (6.073 s)
+[0]   Lists API Integration Tests
+[0]     ??? POST /lists - Should create a new list (955 ms)
+[0]     ??? PUT /lists/reorder - Should reorder lists (1270 ms)
+[0]     ??? DELETE /lists/:id - Should delete list with cards (Cascade check) (1172 ms)
+[0] 
+[0]   console.log
+[0]     ??? PostgreSQL connected
+[0] 
+[0]       at BoundPool.log (config/db.js:22:11)
+[0] 
+[0] [0mPOST /boards [32m201[0m 1890.537 ms - 98[0m
+[0] [0mGET /boards/148/details [32m200[0m 975.386 ms - 130[0m
+[0]   console.error
+[0]     [ERROR] GET /boards/-1: Board not found
+[0] 
+[0]     [0m [90m  5 |[39m [90m// eslint-disable-next-line no-unused-vars[39m
+[0]      [90m  6 |[39m [36mconst[39m errorHandler [33m=[39m (err[33m,[39m req[33m,[39m res[33m,[39m next) [33m=>[39m {
+[0]     [31m[1m>[22m[39m[90m  7 |[39m   console[33m.[39merror([32m`[ERROR] ${req.method} ${req.path}:`[39m[33m,[39m err[33m.[39mmessage [33m||[39m err)[33m;[39m
+[0]      [90m    |[39m           [31m[1m^[22m[39m
+[0]      [90m  8 |[39m
+[0]      [90m  9 |[39m   [36mconst[39m status [33m=[39m err[33m.[39mstatus [33m||[39m err[33m.[39mstatusCode [33m||[39m [35m500[39m[33m;[39m
+[0]      [90m 10 |[39m   [36mconst[39m message [33m=[39m err[33m.[39mmessage [33m||[39m [32m'Internal Server Error'[39m[33m;[39m[0m
+[0] 
+[0]       at error (middleware/errorHandler.js:7:11)
+[0]       at Layer.handle_error (node_modules/express/lib/router/layer.js:71:5)
+[0]       at trim_prefix (node_modules/express/lib/router/index.js:326:13)
+[0]       at node_modules/express/lib/router/index.js:286:9
+[0]       at Function.process_params (node_modules/express/lib/router/index.js:346:12)
+[0]       at next (node_modules/express/lib/router/index.js:280:10)
+[0]       at Layer.handle_error (node_modules/express/lib/router/layer.js:67:12)
+[0]       at trim_prefix (node_modules/express/lib/router/index.js:326:13)
+[0]       at node_modules/express/lib/router/index.js:286:9
+[0]       at Function.process_params (node_modules/express/lib/router/index.js:346:12)
+[0]       at next (node_modules/express/lib/router/index.js:280:10)
+[0]       at node_modules/express/lib/router/index.js:646:15
+[0]       at next (node_modules/express/lib/router/index.js:265:14)
+[0]       at next (node_modules/express/lib/router/route.js:141:14)
+[0]       at next (controllers/boardController.js:18:7)
+[0] 
+[0] [0mGET /boards/-1 [33m404[0m 332.065 ms - 43[0m
+[0] [0mDELETE /boards/148 [32m200[0m 660.445 ms - 42[0m
+[0] PASS tests/board.test.js
+[0]   Board API & DB Tests
+[0]     ??? 1. POST /boards - Should create a new board (Layer: API + DB Integration) (1916 ms)
+[0]     ??? 2. GET /boards/:id/details - Should fetch board details (Layer: API) (981 ms)
+[0]     ??? 3. GET /boards/:id - Invalid board ID returns 404/500 (Layer: API Edge Case) (336 ms)
+[0]     ??? 4. BoardService.createBoard() throws on empty title (Layer: Unit Service logic) (2 ms)
+[0] 
+[0] Test Suites: 1 failed, 5 passed, 6 total
+[0] Tests:       1 failed, 19 passed, 20 total
+[0] Snapshots:   0 total
+[0] Time:        108.79 s, estimated 109 s
+[0] Ran all test suites.
+[0] Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?
+[0] npm verbose cwd C:\Users\shubh\OneDrive\Desktop\trello_cello\backend
+[0] npm verbose os Windows_NT 10.0.26200
+[0] npm verbose node v23.9.0
+[0] npm verbose npm  v11.12.0
+[0] npm verbose exit 1
+[0] npm verbose code 1
+[0] npm verbose cwd C:\Users\shubh\OneDrive\Desktop\trello_cello
+[0] npm verbose os Windows_NT 10.0.26200
+[0] npm verbose node v23.9.0
+[0] npm verbose npm  v11.12.0
+[0] npm verbose exit 1
+[0] npm verbose code 1
+[0] npm run test:backend exited with code 1
+npm verbose cwd C:\Use
+rs\shubh\OneDrive\Desk
+top\trello_cello
+npm verbose os 
+Windows_NT 10.0.26200
+npm verbose node 
+v23.9.0
+npm verbose npm  
+v11.12.0
+npm verbose exit 1
+npm verbose code 1

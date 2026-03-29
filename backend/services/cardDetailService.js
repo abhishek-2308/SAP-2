@@ -82,8 +82,9 @@ const CardDetailService = {
   },
 
   // ─── Activities ───────────────────────────────────────────
-  async getActivities(boardId) {
-    return CardDetailRepository.getActivities(boardId);
+  async getActivities(boardId, cardId = null) {
+    if (!boardId && !cardId) throw { status: 400, message: 'boardId or cardId is required' };
+    return CardDetailRepository.getActivities(boardId, cardId);
   },
 
   // ─── Search & Filter ─────────────────────────────────────

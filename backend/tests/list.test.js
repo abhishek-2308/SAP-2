@@ -13,6 +13,7 @@ describe('Lists API Integration Tests', () => {
 
   afterAll(async () => {
     await pool.query("DELETE FROM boards WHERE id = $1", [boardId]);
+    await pool.end();
   });
 
   it('POST /lists - Should create a new list', async () => {

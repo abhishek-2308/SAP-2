@@ -1,0 +1,60 @@
+  console.log
+    ??? PostgreSQL connected
+
+      at BoundPool.log (config/db.js:22:11)
+
+[0mPOST /lists [32m201[0m 889.277 ms - 126[0m
+[0mPOST /lists [32m201[0m 905.366 ms - 125[0m
+[0mPOST /lists/reorder [32m200[0m 303.211 ms - 126[0m
+[0mDELETE /lists/311 [32m200[0m 646.944 ms - 41[0m
+node.exe : PASS 
+tests/list.test.js 
+(6.666 s)
+At C:\Users\shubh\AppData
+\Roaming\npm\npx.ps1:24 
+char:5
++     & "node$exe"  "$bas
+edir/node_modules/npm/bin
+/npx-cli.js" $args
++     ~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
+    + CategoryInfo       
+       : NotSpecified:   
+  (PASS tests/list.tes   
+ t.js (6.666 s):Strin    
+g) [], RemoteExcepti    
+on
+    + FullyQualifiedErro 
+   rId : NativeCommandE  
+  rror
+ 
+  Lists API Integration 
+Tests
+    ??? POST /lists - 
+Should create a new list 
+(925 ms)
+    ??? PUT 
+/lists/reorder - Should 
+reorder lists (1225 ms)
+    ??? DELETE 
+/lists/:id - Should 
+delete list with cards 
+(Cascade check) (1238 ms)
+
+Test Suites: 1 passed, 1 
+total
+Tests:       3 passed, 3 
+total
+Snapshots:   0 total
+Time:        6.758 s, 
+estimated 7 s
+Ran all test suites 
+matching 
+/tests\\list.test.js/i.
+Force exiting Jest: Have 
+you considered using 
+`--detectOpenHandles` to 
+detect async operations 
+that kept running after 
+all tests finished?

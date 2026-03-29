@@ -117,7 +117,12 @@ const CardDetailController = {
   // ─── Activities ───────────────────────────────────────────
   async getActivities(req, res, next) {
     try {
-      const data = await CardDetailService.getActivities(req.params.boardId);
+      const { boardId } = req.params;
+      const { cardId } = req.query;
+      const data = await CardDetailService.getActivities(
+        boardId ? parseInt(boardId) : null,
+        cardId ? parseInt(cardId) : null
+      );
       res.json({ success: true, data });
     } catch (err) { next(err); }
   },
